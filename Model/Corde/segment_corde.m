@@ -76,7 +76,7 @@ function Derivatives(block)
 % Parametres 
 m = block.InputPort(4).Data;%masse du segment
 T = block.InputPort(5).Data;
-l = block.InputPort(6).Data;%longueur du segment
+s = block.InputPort(6).Data;%longueur du segment
 b = block.InputPort(7).Data;
 % Force appliquee
 f = block.InputPort(3).Data;
@@ -88,6 +88,6 @@ v  = block.ContStates.Data(2);
 
 % Derivees
 block.Derivatives.Data(1) = v;
-block.Derivatives.Data(2) = -(T/(m*l))*(2*x1-y1-y2) - (b/m)*v + (1/m)*f;
+block.Derivatives.Data(2) = -(T/(m*s))*(2*x1-y1-y2) - (b/m)*v + (1/m)*f;
 
 %end Derivatives
