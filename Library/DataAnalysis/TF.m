@@ -1,4 +1,4 @@
-for k =2:10
+for k =2:6
     L=length(out.position_5.Data(:,k));
     Fs=2000;                           % or whatever is actual sampling frequency
     y = out.position_5.Data(20:end,k);
@@ -6,7 +6,6 @@ for k =2:10
     X = fft(y)/L;                     % normalized fft
     PSD=2*abs(X(1:L/2+1));            % one-sided amplitude spectrum
     plot(f, PSD);
-    %xlim([0 3500])
     title('Fourier');
     hold on
 end
