@@ -55,7 +55,7 @@ block.RegBlockMethod('Derivatives', @Derivatives);
 
 function InitializeConditions(block)
 % Position initiale
-block.ContStates.Data(1) = 0;
+block.ContStates.Data(1) = 0.01;
 
 % Vitesse initiale
 block.ContStates.Data(2) = 0;
