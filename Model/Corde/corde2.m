@@ -1,7 +1,7 @@
 function corde2(block)
 %MSFUNTMPL_BASIC A Template for a Level-2 MATLAB S-Function
 %   The MATLAB S-function is written as a MATLAB function with the
-%   same name as the S-function. Replace 'msfuntmpl_basic' with the 
+%   same name as the S-function. Replace 'msfuntmpl_basic' with the
 %   name of your S-function.
 
 %   Copyright 2003-2018 The MathWorks, Inc.
@@ -27,30 +27,38 @@ setup(block);
 %%   C MEX counterpart: mdlInitializeSizes
 %%
 function setup(block)
-N = 25;
 % Register number of ports
 block.NumInputPorts  = 4;
 block.NumOutputPorts = 1;
+
+
+% Register parameters
+block.NumDialogPrms     = 3;
 
 % Setup port properties to be inherited or dynamic
 block.SetPreCompInpPortInfoToDynamic;
 block.SetPreCompOutPortInfoToDynamic;
 
-% Override input port properties
+% 
+% %Mass
+block.InputPort(1).Dimensions        = 1;
+% block.InputPort(2).DimensionsMode    = 'Variable';
+% block.InputPort(3).DimensionsMode    = 'Variable';
+% block.InputPort(4).DimensionsMode    = 'Variable';
+% % Override input port properties
 for i = 1:block.NumInputPorts
-    block.InputPort(i).Dimensions        = N;
+    block.InputPort(i).Dimensions        = 25;
     block.InputPort(i).DatatypeID  = 0;  % double
     block.InputPort(i).Complexity  = 'Real';
     block.InputPort(i).DirectFeedthrough = true;
 end
-block.InputPort(1).Dimensions        = 1;
-% Override output port properties
-block.OutputPort(1).Dimensions       = N;
-block.OutputPort(1).DatatypeID  = 0; % double
-block.OutputPort(1).Complexity  = 'Real';
-
-% Register parameters
-block.NumDialogPrms     = 3;
+% block.InputPort(1).Dimensions        = 1;
+% 
+% % Override output port properties
+% block.OutputPort(1).DimensionsMode = 'Variable';
+% block.OutputPort(1).DatatypeID  = 0; % double
+% block.OutputPort(1).Complexity  = 'Real';
+% block.RegBlockMethod('SetInputPortDimensionsMode',  @SetInputDimsMode);
 
 % Register sample times
 %  [0 offset]            : Continuous sample time
@@ -58,7 +66,7 @@ block.NumDialogPrms     = 3;
 %
 %  [-1, 0]               : Inherited sample time
 %  [-2, 0]               : Variable sample time
-block.SampleTimes = [0.0001 0];
+block.SampleTimes = [-1, 0];
 
 % Specify the block simStateCompliance. The allowed values are:
 %    'UnknownSimState', < The default setting; warn and assume DefaultSimState
@@ -95,32 +103,31 @@ block.RegBlockMethod('Terminate', @Terminate); % Required
 %%   C MEX counterpart: mdlSetWorkWidths
 %%
 function DoPostPropSetup(block)
-N = 25;
 block.NumDworks = 3;
-  
-  block.Dwork(1).Name            = 'x';
-  block.Dwork(1).Dimensions      = N;
-  block.Dwork(1).DatatypeID      = 0;      % double
-  block.Dwork(1).Complexity      = 'Real'; % real
-  block.Dwork(1).UsedAsDiscState = true;
-  
-  block.Dwork(2).Name            = 'v';
-  block.Dwork(2).Dimensions      = N;
-  block.Dwork(2).DatatypeID      = 0;      % double
-  block.Dwork(2).Complexity      = 'Real'; % real
-  block.Dwork(2).UsedAsDiscState = true;
-  
-  block.Dwork(3).Name            = 'init';
-  block.Dwork(3).Dimensions      = 1;
-  block.Dwork(3).DatatypeID      = 0;      % double
-  block.Dwork(3).Complexity      = 'Real'; % real
-  block.Dwork(3).UsedAsDiscState = true;
+
+block.Dwork(1).Name            = 'x';
+block.Dwork(1).Dimensions      = block.OutputPort(1).Dimensions;
+block.Dwork(1).DatatypeID      = 0;      % double
+block.Dwork(1).Complexity      = 'Real'; % real
+block.Dwork(1).UsedAsDiscState = true;
+
+block.Dwork(2).Name            = 'v';
+block.Dwork(2).Dimensions      = block.OutputPort(1).Dimensions;
+block.Dwork(2).DatatypeID      = 0;      % double
+block.Dwork(2).Complexity      = 'Real'; % real
+block.Dwork(2).UsedAsDiscState = true;
+
+block.Dwork(3).Name            = 'init';
+block.Dwork(3).Dimensions      = 1;
+block.Dwork(3).DatatypeID      = 0;      % double
+block.Dwork(3).Complexity      = 'Real'; % real
+block.Dwork(3).UsedAsDiscState = true;
 %end DoPostPropSetup
 
 %%
 %% InitializeConditions:
-%%   Functionality    : Called at the start of simulation and if it is 
-%%                      present in an enabled subsystem configured to reset 
+%%   Functionality    : Called at the start of simulation and if it is
+%%                      present in an enabled subsystem configured to reset
 %%                      states, it will be called when the enabled subsystem
 %%                      restarts execution to reset the states.
 %%   Required         : No
@@ -134,7 +141,7 @@ block.NumDworks = 3;
 %%
 %% Start:
 %%   Functionality    : Called once at start of model execution. If you
-%%                      have states that should be initialized once, this 
+%%                      have states that should be initialized once, this
 %%                      is the place to do it.
 %%   Required         : No
 %%   C MEX counterpart: mdlStart
@@ -169,12 +176,13 @@ block.OutputPort(1).Data = block.Dwork(1).Data;
 %%   C MEX counterpart: mdlUpdate
 %%
 function Update(block)
-N = 25;
+N = block.OutputPort(1).Dimensions;
 m = block.DialogPrm(1).Data/N; %masse d'un segment
 s = block.DialogPrm(2).Data/N; %longueur d'un segment
 b = block.DialogPrm(3).Data; %frottement
 T = block.InputPort(1).Data; %Tension
 f = block.InputPort(2).Data; %force
+dt = block.SampleTimes;
 
 x = block.Dwork(1).Data;
 v = block.Dwork(2).Data;
