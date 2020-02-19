@@ -7,6 +7,7 @@ classdef CordeBySegment < handle
         T double;
     end
     properties (SetAccess=protected)
+        i = 0;
         x;
         v;
         k;
@@ -22,26 +23,28 @@ classdef CordeBySegment < handle
             obj.N = N;
             obj.L = L;
             obj.M = M;
-            obj.b(1:N) = b;
+            obj.b = b;
             %Set protected properties
             obj.m = M/N;
             obj.l = L/(N+1);
             if nargin < 7
-                obj.v = zeros(N);
+                obj.v(1:N,1) = 0;
             else
-                obj.v = vitesseInitiale;
+                obj.v = vitesseInitiale(:);
             end
             if nargin < 6
-                obj.x = zeros(N);
+                obj.x(1:N,1) = 0;
             else
-                obj.x = positionInitiale;
+                obj.x = positionInitiale(:);
             end
             obj.T = T; %At the end because it initialize the rest
         end
         
         function pos = CalculateNextPosition(obj,dt,f)
             if nargin == 1
-                f = zeros(obj.N);
+                f(1:obj.N,1) = 0;
+            else
+                f = f(:);
             end
             A = obj.K*obj.x-obj.b*obj.v/obj.m + f/obj.m;
             obj.v = obj.v + dt*A;
@@ -56,7 +59,7 @@ classdef CordeBySegment < handle
     methods (Access = private)
         function obj = Calculate_k(obj)
             obj.k = obj.T/(obj.m*obj.l);
-            obj.K = diag(-2*obj.k*ones(1,obj.N)) + [zeros(obj.N-1,1) diag(obj.k*ones(1,obj.N-1)); zeros(1, obj.N)] + [zeros(1, obj.N);diag(obj.k*ones(1,obj.N-1)) zeros(obj.N-1,1)];
+            obj.K = obj.k*(diag(-2*ones(1,obj.N)) + [zeros(obj.N-1,1) diag(ones(1,obj.N-1)); zeros(1, obj.N)] + [zeros(1, obj.N);diag(ones(1,obj.N-1)) zeros(obj.N-1,1)]);
         end
     end
 end

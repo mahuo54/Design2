@@ -3,15 +3,14 @@ L = 0.443; %m
 M = 0.00325; %g
 T = 68.77; %N;
 b = 0;
-positionInitiale(1:N) = 0;
-positionInitiale(round(N/2)) = 0.001; %m
-vitesseInitiale(1:N) = 0;
 
-corde = CordeBySegment(N,L,M,b,T,positionInitiale,vitesseInitiale);
+corde = CordeBySegment(N,L,M,b,T);
 
-dt = 0.0001;
+dt = 0.001;
 f(1:N) = 0;
 
-x = corde.CalculateNextPosition(dt,f);
 
-x;
+for i = 1:(round(10/dt))
+    x = corde.CalculateNextPosition(dt,f);
+end
+
