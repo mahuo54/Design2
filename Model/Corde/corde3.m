@@ -1,4 +1,4 @@
-function corde2(block)
+function corde3(block)
 %MSFUNTMPL_BASIC A Template for a Level-2 MATLAB S-Function
 %   The MATLAB S-function is written as a MATLAB function with the
 %   same name as the S-function. Replace 'msfuntmpl_basic' with the 
@@ -31,7 +31,7 @@ function setup(block)
 block.NumDialogPrms     = 4;
 N = block.DialogPrm(4).Data;
 % Register number of ports
-block.NumInputPorts  = 4;
+block.NumInputPorts  = 1;
 block.NumOutputPorts = 1;
 
 % Setup port properties to be inherited or dynamic
@@ -40,12 +40,11 @@ block.SetPreCompOutPortInfoToDynamic;
 
 % Override input port properties
 for i = 1:block.NumInputPorts
-    block.InputPort(i).Dimensions        = N;
+    block.InputPort(i).Dimensions        = 1;
     block.InputPort(i).DatatypeID  = 0;  % double
     block.InputPort(i).Complexity  = 'Real';
     block.InputPort(i).DirectFeedthrough = true;
 end
-block.InputPort(1).Dimensions        = 1;
 % Override output port properties
 block.OutputPort(1).Dimensions       = N;
 block.OutputPort(1).DatatypeID  = 0; % double
@@ -174,8 +173,8 @@ N = block.DialogPrm(4).Data;
 m = block.DialogPrm(1).Data/N; %masse d'un segment
 s = block.DialogPrm(2).Data/N; %longueur d'un segment
 b = block.DialogPrm(3).Data; %frottement
-T = block.InputPort(1).Data; %Tension
-f = block.InputPort(2).Data; %force
+T = 68.77; %Tension
+f = [0 0 block.InputPort(2).Data zeros(N-3)] %force
 
 x = block.Dwork(1).Data;
 v = block.Dwork(2).Data;
