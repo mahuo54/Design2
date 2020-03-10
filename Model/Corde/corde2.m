@@ -27,7 +27,9 @@ setup(block);
 %%   C MEX counterpart: mdlInitializeSizes
 %%
 function setup(block)
-N = 25;
+% Register parameters
+block.NumDialogPrms     = 4;
+N = block.DialogPrm(4).Data;
 % Register number of ports
 block.NumInputPorts  = 4;
 block.NumOutputPorts = 1;
@@ -49,8 +51,7 @@ block.OutputPort(1).Dimensions       = N;
 block.OutputPort(1).DatatypeID  = 0; % double
 block.OutputPort(1).Complexity  = 'Real';
 
-% Register parameters
-block.NumDialogPrms     = 3;
+
 
 % Register sample times
 %  [0 offset]            : Continuous sample time
@@ -95,7 +96,7 @@ block.RegBlockMethod('Terminate', @Terminate); % Required
 %%   C MEX counterpart: mdlSetWorkWidths
 %%
 function DoPostPropSetup(block)
-N = 25;
+N = block.DialogPrm(4).Data;
 block.NumDworks = 3;
   
   block.Dwork(1).Name            = 'x';
@@ -112,7 +113,7 @@ block.NumDworks = 3;
   
   block.Dwork(3).Name            = 'init';
   block.Dwork(3).Dimensions      = 1;
-  block.Dwork(3).DatatypeID      = 0;      % double
+  block.Dwork(3).DatatypeID      = 8;      % boolean
   block.Dwork(3).Complexity      = 'Real'; % real
   block.Dwork(3).UsedAsDiscState = true;
 %end DoPostPropSetup
@@ -140,7 +141,7 @@ block.NumDworks = 3;
 %%   C MEX counterpart: mdlStart
 %%
 function Start(block)
-block.Dwork(3).Data = 1;
+block.Dwork(3).Data = true;
 
 %end Start
 
@@ -152,10 +153,10 @@ block.Dwork(3).Data = 1;
 %%   C MEX counterpart: mdlOutputs
 %%
 function Outputs(block)
-if block.Dwork(3).Data == 1
+if block.Dwork(3).Data
     block.Dwork(1).Data = block.InputPort(3).Data;
     block.Dwork(2).Data = block.InputPort(4).Data;
-    block.Dwork(3).Data = 0;
+    block.Dwork(3).Data = false;
 end
 block.OutputPort(1).Data = block.Dwork(1).Data;
 
@@ -169,7 +170,7 @@ block.OutputPort(1).Data = block.Dwork(1).Data;
 %%   C MEX counterpart: mdlUpdate
 %%
 function Update(block)
-N = 25;
+N = block.DialogPrm(4).Data;
 m = block.DialogPrm(1).Data/N; %masse d'un segment
 s = block.DialogPrm(2).Data/N; %longueur d'un segment
 b = block.DialogPrm(3).Data; %frottement
