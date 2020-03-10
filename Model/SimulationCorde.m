@@ -5,7 +5,7 @@ T = 68.77; %N;
 b = 0;
 
 N_vector = [3 5 15 25 40 60 80 100];
-dt_vector = [0.005 0.0025 0.001 0.0005 0.00025 0.0001 0.00001];
+dt_vector = [0.001 0.0005 0.00025 0.0001 0.00005 0.00001];
 
 i = 1;
 
@@ -15,12 +15,14 @@ for N = N_vector
         i = i+1;
     end
 end
+writematrix(results,'resultsSimulation2.txt');
+
 
 
 function result = RunModel(L,M,T,b,N,dt)
 expectedF = sqrt(T*L/M)/2/L;
 
-modelname = sprintf('ModelCordeSim_%i_%i',N, dt*1000000);
+modelname = sprintf('SimulationCorde_%i_%i',N, dt*1000000);
 model = createModel_CordeBySegment(modelname,N,M,L,T,b,dt) ;
 % in = Simulink.SimulationInput(modelname);
 cs = getActiveConfigSet(modelname);
