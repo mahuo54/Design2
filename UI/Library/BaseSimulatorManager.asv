@@ -1,0 +1,13 @@
+classdef (Abstract) BaseSimulatorManager
+    properties
+        %List of results for simulation depending on t
+        Property1
+    end
+    
+    methods
+        function obj = BaseSimulatorManager()
+        end
+    end
+    me
+end
+
