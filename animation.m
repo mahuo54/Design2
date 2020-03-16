@@ -1,25 +1,26 @@
 
-x = [1:23];
-xi = linspace(min(x), max(x), 150); 
+x = [1:25];
+xi = linspace(0, 26, 150); 
 
 %h = figure;
 
 %On choisit les axes en fonction de ymax
-ymax = 1.25*max(max(max(position_21)),max(abs(min(position_21))))
+%ymax = 1.25*max(max(max(out.corde_mesure)),max(abs(out.corde_mesure)))
 
 %filename = 'testAnimated.gif'
-for k = 1 : length(position_21.Time)
-    y = position_21.Data(k,x);
-    yi = interp1(x, y, xi, 'spline', 'extrap');
+for k = 1 :50: length(out.corde_mesure.Time)
+    y = out.corde_mesure.Data(k,x);
+    yi = interp1([0 x 26], [0 y 0], xi, 'spline', 'extrap');
   plot(xi, yi, '-r');
   title('Animation de la corde');
   hold off
   grid
-  xlim([1 23])
-  ylim([-1*ymax ymax])
+  xlim([0 26])
+  ylim([-1*0.003 0.003])
   xlabel('Segments de corde')
   ylabel('Position')
-  pause( 0.0005 );
+  drawnow
+  pause( 0.0001 );
   
   %Faire un GIF
   %frame = getframe(h); 
