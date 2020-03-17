@@ -1,0 +1,1 @@
+test =  CordeSimulator('ModeleCompletSimple');

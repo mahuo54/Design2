@@ -1,5 +1,4 @@
-classdef SimulationDTO
-       
+classdef SimulationParameterManager
     properties
         Frequence(1,:) double;
         LinearDensity (1,:) double;
@@ -9,7 +8,7 @@ classdef SimulationDTO
     end
     
     methods
-        function obj = SimulationDTO()
+        function obj = SimulationParameterManager()
         end
         function N = GetNumberOfSimulation(obj)
            N =  length(obj.Frequence)*length(obj.LinearDensity)*length(obj.Length);

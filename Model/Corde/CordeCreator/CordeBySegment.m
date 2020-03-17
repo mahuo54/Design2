@@ -7,7 +7,7 @@ classdef CordeBySegment < handle
         T double;
     end
     properties (SetAccess=protected)
-        i = 0;
+%         i = 0;
         x;
         v;
         k;
@@ -39,7 +39,6 @@ classdef CordeBySegment < handle
             end
             obj.T = T; %At the end because it initialize the rest
         end
-        
         function pos = CalculateNextPosition(obj,dt,f)
             if nargin == 1
                 f(1:obj.N,1) = 0;
@@ -50,6 +49,10 @@ classdef CordeBySegment < handle
             obj.v = obj.v + dt*A;
             obj.x = obj.x + dt*obj.v;
             pos = obj.x;
+        end
+        function ForceInitialValue(obj,x0, v0)
+            obj.x = x0;
+            obj.v = v0;
         end
         function set.T(obj, value)
             obj.T = value;

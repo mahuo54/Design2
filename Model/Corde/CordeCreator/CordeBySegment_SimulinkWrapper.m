@@ -1,10 +1,12 @@
 classdef CordeBySegment_SimulinkWrapper < handle
     properties (Access = private)
         corde CordeBySegment; %We could use an interface instead if we wanted multiple models.
+        isCordeInitialized;
         stupidSampleTimeMightNotBeRealOne;
     end
     methods
         function obj = CordeBySegment_SimulinkWrapper(corde)
+            obj.isCordeInitialized = false;
             obj.corde = corde; %Fuck. Not working. I want to create the corde from the parameter...
         end
     end
@@ -21,13 +23,13 @@ classdef CordeBySegment_SimulinkWrapper < handle
             b = block.DialogPrm(3).Data; %frottement
             N = block.DialogPrm(4).Data; %N
             positionInitiale(1:N) = 0;
-            positionInitiale(round(N/2)) = 0.01; %m
-            corde = CordeBySegment(N,L,M,b,0,positionInitiale); %Initially, it's setup at 0, but it will change fast
+            vitesseInitiale(1:N) = 0;
+            corde = CordeBySegment(N,L,M,b,0,positionInitiale,vitesseInitiale); %Initially, it's setup at 0, but it's gonna be updated on the first run.
             cordeWrapper = CordeBySegment_SimulinkWrapper(corde);
             cordeWrapper.stupidSampleTimeMightNotBeRealOne = block.DialogPrm(5).Data; %Not sure the time it takes to access the data, would rather have it in memory.
             
             %Register number of ports
-            block.NumInputPorts  = 2;
+            block.NumInputPorts  = 4;
             block.NumOutputPorts = 1;
             
             % Setup port properties to be inherited or dynamic
@@ -46,6 +48,18 @@ classdef CordeBySegment_SimulinkWrapper < handle
             block.InputPort(2).DatatypeID  = 0;  % double
             block.InputPort(2).Complexity  = 'Real';
             block.InputPort(2).DirectFeedthrough = true;
+            
+            %X_0
+            block.InputPort(3).Dimensions  = cordeWrapper.corde.N;
+            block.InputPort(3).DatatypeID  = 0;  % double
+            block.InputPort(3).Complexity  = 'Real';
+            block.InputPort(3).DirectFeedthrough = true;
+            
+            %V_0
+            block.InputPort(4).Dimensions  = cordeWrapper.corde.N;
+            block.InputPort(4).DatatypeID  = 0;  % double
+            block.InputPort(4).Complexity  = 'Real';
+            block.InputPort(4).DirectFeedthrough = true;
             
             % Override output port properties - Position
             block.OutputPort(1).Dimensions  = cordeWrapper.corde.N;
@@ -108,6 +122,10 @@ classdef CordeBySegment_SimulinkWrapper < handle
             block.OutputPort(1).Data = block.Dwork(1).Data;
         end
         function Update(obj, block)
+            if(~obj.isCordeInitialized)
+                obj.corde.ForceInitialValue(block.InputPort(3).Data,block.InputPort(4).Data);
+                obj.isCordeInitialized = true;
+            end
             dt = obj.stupidSampleTimeMightNotBeRealOne;%block.SampleTimes(1); %I can't believe how hard it is to ge tthe fufdjsdfkasj sampel time. Inherited base itself from input, but input inherited too. Can't find a reference to the model name and even then not sure how to find it... ughhh
             T = block.InputPort(1).Data;
             if(T ~= obj.corde.T) %%When we set T, we recalculate internal matrix A.
