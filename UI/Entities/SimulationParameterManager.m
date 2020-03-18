@@ -32,8 +32,8 @@ classdef SimulationParameterManager
                 simParams.N = 25;
                 simParams.dt = 0.001;
                 simParams.T_0 = 60;
-                simParams.pos_actuateur_relative = 0.75;
-                simParams.pos_capteur_relative = 0.25;
+                simParams.pos_actuateur_relative = 0.76;
+                simParams.pos_capteur_relative = 0.24;
                 simParams.polarite = 180;%degree or rad  
         
                 SimulationParametersArray(i) = simParams; % %Allocation starts at the end
