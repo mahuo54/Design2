@@ -15,10 +15,10 @@ classdef SimulationParameterManager
         end
         function SimulationParametersArray = EnumerateSimulationParameters(obj)
             elements = {obj.Frequence, obj.LinearDensity, obj.Length}; %cell array with N vectors to combine
-            combinations = GetCombinations(elements);
-            for i = length(combinations):1 
+            combinations = SimulationParameterManager.GetCombinations(elements);
+            for i = length(combinations):-1:1 
                 %Parameters from combinations
-                parameters = combinations(i);
+                parameters = combinations(i,:);
                 simParams = SimulationParameter();
                 simParams.f = parameters(1);
                 simParams.L = parameters(3);
@@ -36,7 +36,7 @@ classdef SimulationParameterManager
                 simParams.pos_capteur_relative = 0.25;
                 simParams.polarite = 180;%degree or rad  
         
-                SimulationParametersArray(i) = simParams; %#ok<AGROW> %Allocation starts at the end
+                SimulationParametersArray(i) = simParams; % %Allocation starts at the end
             end
         end
     end

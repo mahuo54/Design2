@@ -1,1 +1,1 @@
-test =  CordeSimulator('ModeleCompletSimple');
+test =  SystemSimulator('ModeleCompletSimple');
