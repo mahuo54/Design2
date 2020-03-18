@@ -16,27 +16,11 @@ classdef SimulationParameterManager
         function SimulationParametersArray = EnumerateSimulationParameters(obj)
             elements = {obj.Frequence, obj.LinearDensity, obj.Length}; %cell array with N vectors to combine
             combinations = GetCombinations(elements);
-            for i = length(combinations):1 
-                %Parameters from combinations
+            for i = length(combinations):1 %This actually fix the size at the first iteration
                 parameters = combinations(i);
                 simParams = SimulationParameter();
-                simParams.f = parameters(1);
-                simParams.L = parameters(3);
-                simParams.M = parameters(2)*parameters(3);
-                
-                %Fixed parameters from manager
-                simParams.duration = obj.Duration;
-                
-                %Parameters not handled yet by UI
-                simParams.b = 0;
-                simParams.N = 25;
-                simParams.dt = 0.001;
-                simParams.T_0 = 60;
-                simParams.pos_actuateur_relative = 0.75;
-                simParams.pos_capteur_relative = 0.25;
-                simParams.polarite = 180;%degree or rad  
-        
-                SimulationParametersArray(i) = simParams; %#ok<AGROW> %Allocation starts at the end
+                simParams.f = parameters.
+                SimulationParametersArray(i) = simParams;
             end
         end
     end

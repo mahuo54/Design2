@@ -1,4 +1,4 @@
-classdef CordeSimulator < handle
+classdef SystemSimulator < handle
     properties
         modelName;
         idx_actuateur_default = 20;
@@ -13,7 +13,12 @@ classdef CordeSimulator < handle
             %Actually though, maybe we want to have it in memory.
             model = load_system(obj.modelName);
             SetParameter(model,simulationParameter);
-            
+            cs = getActiveConfigSet(obj.modelName);
+            mdl_cs = cs.copy;
+            set_param(mdl_cs,  'StartTime','0','StopTime',simulationParameter.duration,'SolverType','Fixed-step', 'FixedStep',num2str(simulationParameter.dt));
+            %          'SaveState','on','StateSaveName','xoutNew',...
+            %          'SaveOutput','on','OutputSaveName','youtNew',...
+            results = sim(modelname, mdl_cs); %'StartTime','0','StopTime','10','FixedStep',num2str(dt));
         end
         
         function SetParameter(model, simulationParameter)
