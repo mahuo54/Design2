@@ -1,8 +1,6 @@
 classdef SystemSimulator < handle
     properties
         modelName;
-        idx_actuateur_default = 20;
-        idx_capteur_default = 6;
     end
     methods 
         function obj = SystemSimulator(modelName)
