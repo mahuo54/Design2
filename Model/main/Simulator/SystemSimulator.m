@@ -7,13 +7,12 @@ classdef SystemSimulator < handle
             load_system('simulink');
         end
         function results = RunSimulation(obj, simulationParameter)
-            %Actually though, maybe we want to have it in memory.
-            
-            
+            %Actually though, maybe we want to have it in memory. Look
+            %inSimulation.
+                        
             model = load_system(obj.modelName);
             obj.SetParameter(model,simulationParameter);
-            save_system(model);
-            
+            save_system(model);            
             
             cs = getActiveConfigSet(obj.modelName);
             mdl_cs = cs.copy;
@@ -30,68 +29,28 @@ classdef SystemSimulator < handle
     methods (Access = private)
         function SetParameter(obj, model, simulationParameter)
             %% Consigne F
-            f_h = Simulink.findBlocks(model,'Name','Fréquence voulue');
-            set_param(f_h,'Value',num2str(simulationParameter.f));
+            consigne_h = Simulink.findBlocks(model,'Name','Consigne_f_step');
+            set_param(consigne_h,'Time',num2str(4));
+            set_param(consigne_h,'Before',num2str(200));
+            set_param(consigne_h,'After',num2str(220));
             
             %% Corde 
             %Here we could switch the file with FunctionName
-            corde_h = Simulink.findBlocks(model,'Name','corde');
+            corde_h = Simulink.findBlocks(model,'Name','corde_fct');
             set_param(corde_h,'Parameters',sprintf('%d, %d, %d, %i, %d',...
                 simulationParameter.M,simulationParameter.L,simulationParameter.b,simulationParameter.N,simulationParameter.dt));
             
-            %% If N different than default, readjust the arrays
-            % What depends on N? 
-            % - x_0_mux, v_0_mux, f_mux, x_out_demux
-            
             %% Set Initial Conditions
+            %x_0, v_0
             
             %% Config actuateur
             idx_actuateur = obj.GetIndex(simulationParameter.pos_actuateur_relative, simulationParameter.N);
-            %Remove connection from mux to the actuateur, add it back and
-            %fill the rest.            
-            f_mux_h = Simulink.findBlocks(model,'Name','f_mux');
-            force_cst_h = Simulink.findBlocks(model,'Name','force cst');
-            actuateur_h = Simulink.findBlocks(model,'Name','Actuateur'); %Doesn't refresh. It's not a handle, it refers to the handle.
-            
-            actuateur_lines_h = get_param(actuateur_h,'LineHandles');
-            if(actuateur_lines_h.Outport(1) ~= -1)
-                delete_line(actuateur_lines_h.Outport(1));
-            end            
-            f_mux_lines_h = get_param(f_mux_h,'LineHandles');
-            if(f_mux_lines_h.Inport(idx_actuateur) ~= -1)
-                delete_line(f_mux_lines_h.Inport(idx_actuateur)); 
-            end
-            %add lines back
-            actuateur_port_h = get_param(actuateur_h,'PortHandles'); 
-            f_mux_port_h= get_param(f_mux_h,'PortHandles');
-            force_cst_port_h= get_param(force_cst_h,'PortHandles');
-            add_line(model,actuateur_port_h.Outport(1), f_mux_port_h.Inport(idx_actuateur),'autorouting','on');
-            %For all -1
-            f_mux_lines_h = get_param(f_mux_h,'LineHandles');
-            for i = find(f_mux_lines_h.Inport == -1)
-                add_line(model,force_cst_port_h.Outport(1), f_mux_port_h.Inport(i),'autorouting','on');    
-            end
-            
+            actuateur_h = Simulink.findBlocks(model,'Name','actuateur_assignment');
+            set_param(actuateur_h,'Indices',idx_actuateur);
             
             %% Config capteur
             idx_capteur = obj.GetIndex(simulationParameter.pos_capteur_relative, simulationParameter.N);
-            x_out_demux_h = Simulink.findBlocks(model,'Name','x_out_demux');
-            position_sum_h = Simulink.findBlocks(model,'Name','position_sum');
-            x_out_demux_lines_h = get_param(x_out_demux_h,'LineHandles');
             
-            %remove all but idx_capteur, add idx_capteur if needed.
-            for i = find(x_out_demux_lines_h.Outport ~= -1)
-                if(i ~= idx_capteur)
-                    delete_line(x_out_demux_lines_h.Outport(i));
-                end
-            end            
-            %add lines back
-            if(x_out_demux_lines_h.Outport(idx_capteur) == -1)
-                x_out_demux_ports_h = get_param(x_out_demux_h,'PortHandles');
-                position_sum_lines_h= get_param(position_sum_h,'LineHandles');
-                position_sum_ports_h= get_param(position_sum_h,'PortHandles');
-                add_line(model,x_out_demux_ports_h.Outport(idx_capteur), position_sum_ports_h.Inport(find(position_sum_lines_h.Inport==-1,1,'first')),'autorouting','on');
-            end   
             %% Polarité - not an option at the time.
 
             %% Initial Tension
