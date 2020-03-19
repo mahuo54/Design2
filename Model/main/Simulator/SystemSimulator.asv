@@ -50,7 +50,7 @@ classdef SystemSimulator < handle
             
             %% Config capteur
             idx_capteur = obj.GetIndex(simulationParameter.pos_capteur_relative, simulationParameter.N);
-            actuateur_h = Simulink.findBlocks(model,'Name','x_out_selector');
+            actuateur_h = Simulink.findBlocks(model,'Name','actuateur_assignment');
             set_param(actuateur_h,'Indices',idx_actuateur);
             
             %% Polarité - not an option at the time.
