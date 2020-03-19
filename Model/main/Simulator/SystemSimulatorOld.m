@@ -1,20 +1,17 @@
-classdef SystemSimulator < handle
+classdef SystemSimulatorOld < handle
     properties
-        modelName = 'SystemeCompletProcedural';
+        modelName;
     end
     methods 
-        function obj = SystemSimulator()
+        function obj = SystemSimulatorOld(modelName)
             load_system('simulink');
+            obj.modelName = modelName;
         end
         function results = RunSimulation(obj, simulationParameter)
             %Actually though, maybe we want to have it in memory.
-            
-            
             model = load_system(obj.modelName);
             obj.SetParameter(model,simulationParameter);
             save_system(model);
-            
-            
             cs = getActiveConfigSet(obj.modelName);
             mdl_cs = cs.copy;
             set_param(mdl_cs,  'StartTime','0','StopTime',num2str(simulationParameter.duration),'SolverType','Fixed-step', 'FixedStep',num2str(num2str(simulationParameter.dt)));
