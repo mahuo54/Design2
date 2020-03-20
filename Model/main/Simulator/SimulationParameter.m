@@ -9,7 +9,7 @@ classdef SimulationParameter
         L;
         b;
         N = 25;
-        dt = 0.001 ;
+        dt = 0.0001 ;
        
         T_0 = 60;
         x_0 = 0;
