@@ -43,30 +43,30 @@ classdef SystemSimulator < handle
             %Here we could switch the file with FunctionName
             corde_h = Simulink.findBlocks(model,'Name','corde_fct');
             set_param(corde_h,'Parameters',sprintf('%d, %d, %d, %i, %d',...
-                simulationParameter.corde.M,simulationParameter.corde.L,simulationParameter.corde.b,simulationParameter.corde.N,simulationParameter.dt));
+                simulationParameter.corde.M,simulationParameter.corde.L,simulationParameter.b,simulationParameter.N,simulationParameter.dt));
             
             %% Set Initial Conditions
             x_0_cst_h = Simulink.findBlocks(model,'Name','x_0_cst');
-            if(length(simulationParameter.corde.x_0) == 1)
-                set_param(x_0_cst_h, 'Value', ['repmat(' num2str(simulationParameter.corde.x_0) ',1,' num2str(simulationParameter.corde.N) ')']);
+            if(length(simulationParameter.x_0) == 1)
+                set_param(x_0_cst_h, 'Value', ['repmat(' num2str(simulationParameter.x_0) ',1,' num2str(simulationParameter.N) ')']);
             else
-                set_param(x_0_cst_h, 'Value', ['[' num2str(simulationParameter.corde.x_0) ']']);
+                set_param(x_0_cst_h, 'Value', ['[' num2str(simulationParameter.x_0) ']']);
             end
             
             v_0_cst_h = Simulink.findBlocks(model,'Name','v_0_cst');
-            if(length(simulationParameter.corde.x_0) == 1)
-                set_param(v_0_cst_h, 'Value', ['repmat(' num2str(simulationParameter.corde.v_0) ',1,' num2str(simulationParameter.corde.N) ')']);
+            if(length(simulationParameter.x_0) == 1)
+                set_param(v_0_cst_h, 'Value', ['repmat(' num2str(simulationParameter.v_0) ',1,' num2str(simulationParameter.N) ')']);
             else
-                set_param(v_0_cst_h, 'Value', ['[' num2str(simulationParameter.corde.v_0) ']']);
+                set_param(v_0_cst_h, 'Value', ['[' num2str(simulationParameter.v_0) ']']);
             end
             
             %% Config actuateur
-            idx_actuateur = obj.GetIndex(simulationParameter.pos_actuateur_relative, simulationParameter.corde.N);
+            idx_actuateur = obj.GetIndex(simulationParameter.pos_actuateur_relative, simulationParameter.N);
             actuateur_h = Simulink.findBlocks(model,'Name','actuateur_assignment');
             set_param(actuateur_h,'Indices',num2str(idx_actuateur));
             
             %% Config capteur
-            idx_capteur = obj.GetIndex(simulationParameter.pos_capteur_relative, simulationParameter.corde.N);
+            idx_capteur = obj.GetIndex(simulationParameter.pos_capteur_relative, simulationParameter.N);
             capteur_h = Simulink.findBlocks(model,'Name','x_out_selector');
             set_param(capteur_h,'Indices',num2str(idx_capteur));
             
@@ -74,20 +74,19 @@ classdef SystemSimulator < handle
 
             %% Initial Tension
             T_0_h = Simulink.findBlocks(model,'Name','Tension initiale');
-            set_param(T_0_h,'Value',num2str(simulationParameter.corde.T_0));
+            set_param(T_0_h,'Value',num2str(simulationParameter.T_0));
             
             %% Position centre
             position_centre_h = Simulink.findBlocks(model,'Name', 'Position centre');
             set_param(position_centre_h, 'Value',num2str(simulationParameter.position_centre));
             %% Impulse
             impulse_h = Simulink.findBlocks(model,'Name', 'impulse_switch');
-            impulse_assignment_h = Simulink.findBlocks(model,'Name', 'impulse_assignment');
-            idx_impulse = obj.GetIndex(simulationParameter.impulse_relative_position, simulationParameter.corde.N);
-            set_param(impulse_assignment_h,'Indices',num2str(idx_impulse));
             if(simulationParameter.isImpulseOn)
-                set_param(impulse_h,'LabelModeActiveChoice','ImpulseOn');
+                impulse_assignment_h = Simulink.findBlocks(model,'Name', 'impulse_assignment');
+                idx_impulse = obj.GetIndex(simulationParameter.impulse_relative_position, simulationParameter.N);
+                set_param(impulse_assignment_h,'Indices',num2str(idx_impulse));
             else
-                set_param(impulse_h,'LabelModeActiveChoice','ImpulseOff');
+                
             end
         end
         

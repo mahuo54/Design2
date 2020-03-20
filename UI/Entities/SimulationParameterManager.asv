@@ -21,7 +21,6 @@ classdef SimulationParameterManager
                 parameters = combinations(i,:);
                 simParams = SimulationParameter();
                 simParams.f_final = parameters(1);
-                simParams.corde = CordeParameter();
                 simParams.corde.L = parameters(3);
                 simParams.corde.M = parameters(2)*parameters(3);
                 
@@ -30,8 +29,9 @@ classdef SimulationParameterManager
                 
                 %Parameters not handled yet by UI
                 simParams.corde.b = 0;
-                simParams.corde.N = 25;
-                simParams.corde.T_0 = 60;
+                simParams.N = 25;
+                simParams.dt = 0.001;
+                simParams.T_0 = 60;
                 simParams.pos_actuateur_relative = 0.76;
                 simParams.pos_capteur_relative = 0.24;
                 simParams.polarite = 180;%degree or rad  

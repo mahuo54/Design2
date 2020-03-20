@@ -1,24 +1,20 @@
 classdef SimulationParameter
     properties
-        duration = 10;
-        f_final = 120;
-        f_start = 100;
+        duration = 5;
+        f_final = 220;
+        f_start = 200;
         f_time_step = 4;
+        dt = 0.0001;
         
-        M = 0.0031;
-        L;
-        b;
-        N = 25;
-        dt = 0.0001 ;
-       
-        T_0 = 60;
-        x_0 = 0;
-        v_0 = 0;
-        position_centre = 0.00143;
-        
+        corde CordeParameter = CordeParameter();
+              
+        position_centre = 0.001;% 0.00143
         pos_actuateur_relative = 0.75;
         pos_capteur_relative = 0.25;
-        polarite = 180;%degree or rad        
+        polarite = 180;%degree or rad    
+        
+        isImpulseOn = true;
+        impulse_relative_position = 0.5;
     end
     methods
         function obj = SimulationParameter()
