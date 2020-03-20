@@ -30,9 +30,9 @@ classdef SystemSimulator < handle
         function SetParameter(obj, model, simulationParameter)
             %% Consigne F
             consigne_h = Simulink.findBlocks(model,'Name','Consigne_f_step');
-            set_param(consigne_h,'Time',num2str(4));
-            set_param(consigne_h,'Before',num2str(200));
-            set_param(consigne_h,'After',num2str(220));
+            set_param(consigne_h,'Time',num2str(simulationParameter.f_time_step));
+            set_param(consigne_h,'Before',num2str(simulationParameter.f_start));
+            set_param(consigne_h,'After',num2str(simulationParameter.f_final));
             
             %% Corde 
             %Here we could switch the file with FunctionName
@@ -41,23 +41,39 @@ classdef SystemSimulator < handle
                 simulationParameter.M,simulationParameter.L,simulationParameter.b,simulationParameter.N,simulationParameter.dt));
             
             %% Set Initial Conditions
-            %x_0, v_0
+            x_0_cst_h = Simulink.findBlocks(model,'Name','x_0_cst');
+            if(length(simulationParameter.x_0) == 1)
+                set_param(x_0_cst_h, 'Value', ['repmat(' num2str(simulationParameter.x_0) ',1,' num2str(simulationParameter.N) ')']);
+            else
+                set_param(x_0_cst_h, 'Value', ['[' num2str(simulationParameter.x_0) ']']);
+            end
+            
+            v_0_cst_h = Simulink.findBlocks(model,'Name','v_0_cst');
+            if(length(simulationParameter.x_0) == 1)
+                set_param(v_0_cst_h, 'Value', ['repmat(' num2str(simulationParameter.v_0) ',1,' num2str(simulationParameter.N) ')']);
+            else
+                set_param(v_0_cst_h, 'Value', ['[' num2str(simulationParameter.v_0) ']']);
+            end
             
             %% Config actuateur
             idx_actuateur = obj.GetIndex(simulationParameter.pos_actuateur_relative, simulationParameter.N);
             actuateur_h = Simulink.findBlocks(model,'Name','actuateur_assignment');
-            set_param(actuateur_h,'Indices',idx_actuateur);
+            set_param(actuateur_h,'Indices',num2str(idx_actuateur));
             
             %% Config capteur
             idx_capteur = obj.GetIndex(simulationParameter.pos_capteur_relative, simulationParameter.N);
-            actuateur_h = Simulink.findBlocks(model,'Name','x_out_selector');
-            set_param(actuateur_h,'Indices',idx_actuateur);
+            capteur_h = Simulink.findBlocks(model,'Name','x_out_selector');
+            set_param(capteur_h,'Indices',num2str(idx_capteur));
             
             %% Polarité - not an option at the time.
 
             %% Initial Tension
             T_0_h = Simulink.findBlocks(model,'Name','Tension initiale');
             set_param(T_0_h,'Value',num2str(simulationParameter.T_0));
+            
+            %% Position centre
+            position_centre_h = Simulink.findBlocks(model,'Name', 'Position centre');
+            set_param(position_centre_h, 'Value',num2str(simulationParameter.position_centre));
         end
         
         function idx = GetIndex(~,x,N)

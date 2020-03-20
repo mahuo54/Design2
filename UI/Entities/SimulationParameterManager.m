@@ -20,7 +20,7 @@ classdef SimulationParameterManager
                 %Parameters from combinations
                 parameters = combinations(i,:);
                 simParams = SimulationParameter();
-                simParams.f = parameters(1);
+                simParams.f_final = parameters(1);
                 simParams.L = parameters(3);
                 simParams.M = parameters(2)*parameters(3);
                 
