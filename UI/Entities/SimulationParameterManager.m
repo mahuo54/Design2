@@ -1,42 +1,82 @@
 classdef SimulationParameterManager
-    properties
-        Frequence(1,:) double;
+    properties %Might want to organize them. It's just really messy in Matlab
+        Frequence_final(1,:) double;
+        dt(1,:) double;
+       
+        position_centre (1,:) double;
+        pos_actuateur_relative (1,:) double;
+        pos_capteur_relative (1,:) double;
+        polarite (1,:) double;%degree or rad ??? don't know where it is in the model yet.   
+                
         LinearDensity (1,:) double;
         Length (1,:) double;
-                        
-        Duration double; %Basta ya!
+        frottement (1,:) double;
+        N (1,:) int;
+        T_0 (1,:) double;
+        
+        %On met un vecteur et si ce n'est pas un scalaire, on prend les N
+        %premiers termes (N pouvant changer...)
+        x_0 (1,:) double; %Semble pertinent seulement pour une seule simulation, difficile de faire un array d'array dans le UI...
+        v_0 (1,:) double;
+        
+        Duration double; %Basta ya!        
+        Frequence_initial double;
+        Frequence_time_step double;
     end
     
     methods
         function obj = SimulationParameterManager()
         end
-        function N = GetNumberOfSimulation(obj)
-           N =  length(obj.Frequence)*length(obj.LinearDensity)*length(obj.Length);
-        end
-        function SimulationParametersArray = EnumerateSimulationParameters(obj)
-            elements = {obj.Frequence, obj.LinearDensity, obj.Length}; %cell array with N vectors to combine
-            combinations = SimulationParameterManager.GetCombinations(elements);
-            for i = length(combinations):-1:1 
-                %Parameters from combinations
-                parameters = combinations(i,:);
-                simParams = SimulationParameter();
-                simParams.f_final = parameters(1);
-                simParams.corde = CordeParameter();
-                simParams.corde.L = parameters(3);
-                simParams.corde.M = parameters(2)*parameters(3);
-                
-                %Fixed parameters from manager
-                simParams.duration = obj.Duration;
-                
-                %Parameters not handled yet by UI
-                simParams.corde.b = 0;
-                simParams.corde.N = 25;
-                simParams.corde.T_0 = 60;
-                simParams.pos_actuateur_relative = 0.76;
-                simParams.pos_capteur_relative = 0.24;
-                simParams.polarite = 180;%degree or rad  
         
-                SimulationParametersArray(i) = simParams; % %Allocation starts at the end
+        function N = GetNumberOfSimulation(obj)
+           N =  length(obj.Frequence_final			)*...
+                length(obj.dt						)*...	
+                length(obj.position_centre 			)*...
+                length(obj.pos_actuateur_relative 	)*...	
+                length(obj.pos_capteur_relative 	)*...	
+                length(obj.polarite 				)*...	
+                length(obj.LinearDensity 			)*...	
+                length(obj.Length 					)*...	
+                length(obj.frottement 				)*...	
+                length(obj.N 						)*...	
+                length(obj.T_0 						);
+        end
+        
+        function SimulationParametersArray = EnumerateSimulationParameters(obj)
+            elements = {obj.Frequence_final	,...
+                obj.dt						,...
+                obj.position_centre 		,...
+                obj.pos_actuateur_relative 	,...
+                obj.pos_capteur_relative 	,...
+                obj.polarite 				,...
+                obj.LinearDensity 			,...
+                obj.Length 					,...
+                obj.frottement 				,...
+                obj.N 						,...
+                obj.T_0          }; %cell array with N vectors to combine
+            combinations = SimulationParameterManager.GetCombinations(elements);
+            for i = length(combinations):-1:1 %Allocation starts at the end
+                parameters = combinations(i,:);
+                
+                simParams = SimulationParameter();         
+                simParams.duration = obj.Duration;
+                simParams.f_final = parameters(1);
+                simParams.f_start = obj.Frequence_initial;
+                simParams.f_time_step = obj.Frequence_time_step;
+                simParams.dt = parameters(2);
+                simParams.corde = CordeParameter();
+                simParams.corde.L = parameters(8);
+                simParams.corde.M = parameters(7)*parameters(8);
+                               
+                simParams.corde.b = parameters(9);
+                simParams.corde.N = parameters(10);
+                simParams.corde.T_0 = parameters(11);
+                simParams.pos_actuateur_relative = parameters(4);
+                simParams.pos_capteur_relative = parameters(5);
+                simParams.polarite = parameters(6);%degree or rad  
+                simParams.position_centre = parameters(3);
+                
+                SimulationParametersArray(i) = simParams; 
             end
         end
     end
