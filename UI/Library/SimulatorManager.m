@@ -1,4 +1,4 @@
-classdef SimulatorManager 
+classdef SimulatorManager < handle
     properties
         systemSimulator SystemSimulator;
         resultsByParameter;
@@ -11,7 +11,7 @@ classdef SimulatorManager
         function Simulate(obj, simulationParamArrays)
             for i = 1:length(simulationParamArrays)
                 result = obj.systemSimulator.RunSimulation(simulationParamArrays(i));
-                obj.resultsByParameter(i) = {simulationParamArrays(i), result};
+                obj.resultsByParameter{i} = {simulationParamArrays(i), result};
             end            
         end
     end

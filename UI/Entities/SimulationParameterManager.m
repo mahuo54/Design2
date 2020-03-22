@@ -46,12 +46,12 @@ classdef SimulationParameterManager < handle
             obj.Frequence_final = 220;
             obj.dt = 0.0001;
             
-            obj.position_centre = 0.01;
+            obj.position_centre = 0.001;
             obj.pos_actuateur_relative = 0.25 ;
             obj.pos_capteur_relative = 0.75;
             obj.polarite = 180;
             
-            obj.LinearDensity = 0.00745;
+            obj.LinearDensity = 0.00734; %Vericarlo que escribimos en el informe
             obj.Length = 0.443;
             obj.frottement = 0.0326;
             obj.N = 25;
