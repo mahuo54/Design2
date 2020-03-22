@@ -1,4 +1,4 @@
-classdef SimulationParameterManager < handle
+classdef SimulationParameterManager
     properties %Might want to organize them. It's just really messy in Matlab
         Frequence_final(1,:) double;
         dt(1,:) double;
@@ -43,26 +43,28 @@ classdef SimulationParameterManager < handle
         end
         
         function SetToDefault(obj)
-            obj.Frequence_final = 220;
-            obj.dt = 0.0001;
-            
-            obj.position_centre = 0.01;
-            obj.pos_actuateur_relative = 0.25 ;
-            obj.pos_capteur_relative = 0.75;
-            obj.polarite = 180;
-            
-            obj.LinearDensity = 0.00745;
-            obj.Length = 0.443;
-            obj.frottement = 0.002; %What was it again?
-            obj.N = 25;
-            obj.T_0 = 60;
+obj.Frequence_final = 220;
+obj.dt = 0.0001;
 
-            obj.x_0 = 0;
-            obj.v_0 = 0;
-            
-            obj.Duration = 7;
-            obj.Frequence_initial = 200;
-            obj.Frequence_time_step = 3;
+obj.position_centre = 0.01;
+obj.pos_actuateur_relative = 0.25 ;
+obj.pos_capteur_relative = 0.75;
+obj.polarite = 180;   
+
+obj.LinearDensity = 0.00745;
+obj.Length = 0.443
+frottement (1,:) double;
+N (1,:) int16;
+T_0 (1,:) double;
+
+%On met un vecteur et si ce n'est pas un scalaire, on prend les N
+%premiers termes (N pouvant changer...)
+x_0 (1,:) double; %Semble pertinent seulement pour une seule simulation, difficile de faire un array d'array dans le UI...
+v_0 (1,:) double;
+
+Duration double; %Basta ya!        
+Frequence_initial double;
+Frequence_time_step double;
         end
         
         function SimulationParametersArray = EnumerateSimulationParameters(obj)
