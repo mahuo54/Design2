@@ -53,7 +53,7 @@ classdef SimulationParameterManager < handle
             
             obj.LinearDensity = 0.00745;
             obj.Length = 0.443;
-            obj.frottement = 0.002; %What was it again?
+            obj.frottement = 0.0326;
             obj.N = 25;
             obj.T_0 = 60;
 
