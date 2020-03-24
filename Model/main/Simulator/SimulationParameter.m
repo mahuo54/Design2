@@ -25,7 +25,6 @@ classdef SimulationParameter
         
         regulateur_gain = -0.008936;
         
-        %% to add
         servoclef_clef = -0.384;
         freq_mes_transfer = 0.1;
     end
