@@ -15,19 +15,15 @@ classdef SimulationParameter
         
         isImpulseOn = true;
         impulse_relative_position = 0.5;
-        
-        actuateur_force_magnetique = 11.65;
-        actuateur_circuitRL_s = 0.07668;
-        
+        %% to add
+        actionneur_force_magnetique = 11.65;
         capteur_R3 = 744.5;
-        circuit_passe_haut = 0.000738;
-        circuit_passe_bas = 0.0099;
-        
         regulateur_gain = -0.008936;
         
-        %% to add
+        circuit_passe_haut = 0.000738;
+        circuit_passe_bas = 0.0099;
         servoclef_clef = -0.384;
-        freq_mes_transfer = 0.1;
+        actuateur_
     end
     methods
         function obj = SimulationParameter()

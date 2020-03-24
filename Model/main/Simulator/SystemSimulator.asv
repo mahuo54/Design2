@@ -69,7 +69,7 @@ classdef SystemSimulator < handle
             actuateur_fm_h = Simulink.findBlocks(actuateur_h, 'Name','Force magnétique');
             set_param(actuateur_fm_h, 'Gain',num2str(simulationParameter.actuateur_force_magnetique));
             actuateur_RL_h = Simulink.findBlocks(actuateur_h, 'Name','Circuit RL');
-            set_param(actuateur_RL_h, 'Denominator', ['[' num2str(simulationParameter.actuateur_circuitRL_s) ' 263]']);
+            set_param(actuateur_RL_h, 'Denominator', ['[' num2str(actuateur_circuitRL_s) ' 263]']);
             
             %% Config capteur
             idx_capteur = obj.GetIndex(simulationParameter.pos_capteur_relative, simulationParameter.corde.N);
@@ -106,17 +106,7 @@ classdef SystemSimulator < handle
             %% Régulateur
             regulateur_h = Simulink.findBlocks(model, 'Name','Régulateur');
             regulateur_gain_h = Simulink.findBlocks(regulateur_h, 'Name','Gain');
-            set_param(regulateur_gain_h, 'Gain',num2str(simulationParameter.regulateur_gain));
-            %% Servoclef
-            servoclef_h = Simulink.findBlocks(model, 'Name','Servoclef');
-            servoclef_clef_h = Simulink.findBlocks(servoclef_h, 'Name','Clef');
-            set_param(servoclef_clef_h, 'Gain', num2str(simulationParameter.servoclef_clef));
-            
-            %% Mesure fréquence
-            mesure_freq_h = Simulink.findBlocks(model, 'Name','Mesure fréquence');
-            mesure_fre_transFct_h = Simulink.findBlocks(mesure_freq_h, 'Name','Transfer Fcn');
-            set_param(mesure_fre_transFct_h, 'Denominator',['[' num2str(simulationParameter.servoclef_clef) ' 1]' ]);
-            
+            set_param(regulateur_gain_h, '
         end
         
         function idx = GetIndex(~,x,N)
