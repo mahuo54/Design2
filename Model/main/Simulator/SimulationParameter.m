@@ -7,13 +7,13 @@ classdef SimulationParameter
         dt = 0.0001;
         
         corde CordeParameter = CordeParameter();
-              
+            
         position_centre = 0.001;% 0.00143
         pos_actuateur_relative = 0.75;
         pos_capteur_relative = 0.25;
         polarite = 180;%degree or rad    
         
-        isImpulseOn = true;
+        isImpulseOn = false;
         impulse_relative_position = 0.5;
         
         actuateur_force_magnetique = 11.65;
@@ -30,6 +30,7 @@ classdef SimulationParameter
     end
     methods
         function obj = SimulationParameter()
+            obj.corde.x_0 = 0.01;
         end
         function isValid = Validate(obj)
             if(length(obj.corde.x_0) ~= 1 && length(obj.corde.x_0) ~= obj.corde.N)
