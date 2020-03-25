@@ -115,7 +115,7 @@ classdef SystemSimulator < handle
             %% Mesure fréquence
             mesure_freq_h = Simulink.findBlocks(model, 'Name','Mesure fréquence');
             mesure_fre_transFct_h = Simulink.findBlocks(mesure_freq_h, 'Name','Transfer Fcn');
-            set_param(mesure_fre_transFct_h, 'Denominator',['[' num2str(simulationParameter.servoclef_clef) ' 1]' ]);
+            set_param(mesure_fre_transFct_h, 'Denominator',['[' num2str(simulationParameter.freq_mes_transfer) ' 1]' ]);
             
         end
         

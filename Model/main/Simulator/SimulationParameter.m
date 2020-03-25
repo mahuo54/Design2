@@ -3,7 +3,7 @@ classdef SimulationParameter
         duration = 5;
         f_final = 220;
         f_start = 200;
-        f_time_step = 4;
+        f_time_step = 3;
         dt = 0.0001;
         
         corde CordeParameter = CordeParameter();
@@ -23,7 +23,7 @@ classdef SimulationParameter
         circuit_passe_haut = 0.000738;
         circuit_passe_bas = 0.0099;
         
-        regulateur_gain = -0.008936;
+        regulateur_gain = -0.0008936;
         
         servoclef_clef = -0.384;
         freq_mes_transfer = 0.1;
