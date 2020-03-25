@@ -39,7 +39,7 @@ classdef SimulationParameterManager < handle
     
     methods
         function obj = SimulationParameterManager()
-            Set
+            obj.SetToDefault();
         end
         
         function N = GetNumberOfSimulation(obj)
@@ -76,12 +76,14 @@ classdef SimulationParameterManager < handle
             
             obj.LinearDensity = defaultParameter.corde.M/defaultParameter.corde.L; %Vericarlo que escribimos en el informe
             obj.Length = defaultParameter.corde.L;
-            obj.frottement = defaultParameter.b;
+            obj.frottement = defaultParameter.corde.b;
             obj.N = defaultParameter.corde.N;
             obj.T_0 = defaultParameter.corde.T_0;
 
             obj.x_0 = defaultParameter.corde.x_0;
             obj.v_0 = defaultParameter.corde.v_0;
+            
+            obj.imp
             
             obj.Duration = defaultParameter.duration;
             obj.Frequence_initial = defaultParameter.f_start;

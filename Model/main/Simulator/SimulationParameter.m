@@ -44,6 +44,25 @@ classdef SimulationParameter
             end
                    
         end
+        
+        function idx = GetIndexActuateur(obj)
+            idx = obj.GetIndex(obj.pos_actuateur_relative);
+        end
+        function idx = GetIndexCapteur(obj)
+            idx = obj.GetIndex(obj.pos_capteur_relative);
+        end
+        function idx = GetIndexImpulsion(obj)
+            idx = obj.GetIndex(obj.impulse_relative_position);
+        end
     end
-    
+    methods (Access = private)
+        function idx = GetIndex(obj, x)
+            idx = round(x*(obj.N+1)); %From 0 to N+1, wouldn't work if at 0 or N_1 though...
+            if (idx ==0 )
+                idx = 1;
+            elseif (idx == obj.N+1)
+                idx = obj.N;
+            end
+        end
+    end
 end

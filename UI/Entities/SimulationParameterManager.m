@@ -83,6 +83,9 @@ classdef SimulationParameterManager < handle
             obj.x_0 = defaultParameter.corde.x_0;
             obj.v_0 = defaultParameter.corde.v_0;
             
+            obj.isImpulseOn = defaultParameter.isImpulseOn;
+            obj.impulse_relative_position = defaultParameter.impulse_relative_position;
+            
             obj.Duration = defaultParameter.duration;
             obj.Frequence_initial = defaultParameter.f_start;
             obj.Frequence_time_step = defaultParameter.f_time_step;

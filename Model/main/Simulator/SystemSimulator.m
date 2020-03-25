@@ -62,7 +62,7 @@ classdef SystemSimulator < handle
             
             %% Config actuateur
             actuateur_pos_h = Simulink.findBlocks(model,'Name','actuateur_assignment');
-            idx_actuateur = obj.GetIndex(simulationParameter.pos_actuateur_relative, simulationParameter.corde.N);
+            idx_actuateur = simulationParameter.GetIndexActuateur();
             set_param(actuateur_pos_h,'Indices',num2str(idx_actuateur));
                         
             actuateur_h = Simulink.findBlocks(model, 'Name','Actuateur');
@@ -72,7 +72,7 @@ classdef SystemSimulator < handle
             set_param(actuateur_RL_h, 'Denominator', ['[' num2str(simulationParameter.actuateur_circuitRL_s) ' 263]']);
             
             %% Config capteur
-            idx_capteur = obj.GetIndex(simulationParameter.pos_capteur_relative, simulationParameter.corde.N);
+            idx_capteur = simulationParameter.GetIndexCapteur();
             capteur_pos_h = Simulink.findBlocks(model,'Name','x_out_selector');
             set_param(capteur_pos_h,'Indices',num2str(idx_capteur))
             
@@ -96,7 +96,7 @@ classdef SystemSimulator < handle
             %% Impulse
             impulse_h = Simulink.findBlocks(model,'Name', 'impulse_switch');
             impulse_assignment_h = Simulink.findBlocks(model,'Name', 'impulse_assignment');
-            idx_impulse = obj.GetIndex(simulationParameter.impulse_relative_position, simulationParameter.corde.N);
+            idx_impulse = simulationParameter.GetIndexImpulsion();
             set_param(impulse_assignment_h,'Indices',num2str(idx_impulse));
             if(simulationParameter.isImpulseOn)
                 set_param(impulse_h,'LabelModeActiveChoice','ImpulseOn');
@@ -119,9 +119,9 @@ classdef SystemSimulator < handle
             
         end
         
-        function idx = GetIndex(~,x,N)
-            idx = round(x*(N+1)); %From 0 to N+1, wouldn't work if at 0 or N_1 though...
-        end
+%         function idx = GetIndex(~,x,N)
+%             idx = round(x*(N+1)); %From 0 to N+1, wouldn't work if at 0 or N_1 though...
+%         end
     end
 end
         
