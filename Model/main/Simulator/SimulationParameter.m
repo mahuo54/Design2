@@ -57,11 +57,11 @@ classdef SimulationParameter
     end
     methods (Access = private)
         function idx = GetIndex(obj, x)
-            idx = round(x*(obj.N+1)); %From 0 to N+1, wouldn't work if at 0 or N_1 though...
+            idx = round(x*(obj.corde.N+1)); %From 0 to N+1, wouldn't work if at 0 or N_1 though...
             if (idx ==0 )
                 idx = 1;
-            elseif (idx == obj.N+1)
-                idx = obj.N;
+            elseif (idx == obj.corde.N+1)
+                idx = obj.corde.N;
             end
         end
     end
