@@ -2,7 +2,7 @@ classdef SimulationParameterManager < handle
     properties %Might want to organize them. It's just really messy in Matlab
         Frequence_final(1,:) double;
         dt(1,:) double;
-       
+    
         position_centre (1,:) double;
         pos_actuateur_relative (1,:) double;
         pos_capteur_relative (1,:) double;
