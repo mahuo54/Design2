@@ -23,7 +23,7 @@ classdef SimulationParameter
         circuit_passe_haut = 0.000738;
         circuit_passe_bas = 0.0099;
         
-        regulateur_gain = -0.0008936;
+        regulateur_gain = -0.006;
         
         servoclef_clef = -0.384;
         freq_mes_transfer = 0.1;

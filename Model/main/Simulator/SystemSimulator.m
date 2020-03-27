@@ -5,6 +5,7 @@ classdef SystemSimulator < handle
     methods 
         function obj = SystemSimulator()
             load_system('simulink');
+            load_system(obj.modelName);
         end
         function results = RunSimulation(obj, simulationParameter)
             %Actually though, maybe we want to have it in memory. Look

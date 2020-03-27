@@ -6,14 +6,14 @@ parameters.f_final = 120;
 parameters.f_start = 100;
 
 simulator = SystemSimulator(); %Rien n'est modifiable sur le simulator.
-
+open_system('SystemeCompletProcedural/Tension_corde');
 result = simulator.RunSimulation(parameters);
 
 %Quel est l'index de l'actuateur???
 idx_actuateur = parameters.GetIndexActuateur();
 
+save('RunSingleSim.mat');
 
-% save('RunSingleSim.mat');
 % load('RunSingleSim.mat');
 
 %Graphique à générer et résultats à obtenir - Ces graphiques apparaîtront
