@@ -14,13 +14,16 @@ classdef SystemSimulator < handle
             obj.SetParameter(model,simulationParameter);
             save_system(model);            
             
-            cs = getActiveConfigSet(obj.modelName);
-            mdl_cs = cs.copy;
-            set_param(mdl_cs,  'StartTime','0','StopTime',num2str(simulationParameter.duration),'SolverType','Fixed-step', 'FixedStep',num2str(num2str(simulationParameter.dt)));
+            mdl_cs = getActiveConfigSet(obj.modelName);
+%             mdl_cs = cs.copy;
+            set_param(mdl_cs,  'StartTime','0','StopTime',num2str(simulationParameter.duration),'SolverType','Fixed-step', 'FixedStep',num2str(simulationParameter.dt));
             %          'SaveState','on','StateSaveName','xoutNew',...
             %          'SaveOutput','on','OutputSaveName','youtNew',...
             %Test timer
-            results = sim(obj.modelName, mdl_cs); %'StartTime','0','StopTime','10','FixedStep',num2str(dt));
+%             set_param(mdl_cs,'Name','ConfigSim');
+%             attachConfigSet(obj.modelName, mdl_cs);
+%             setActiveConfigSet(obj.modelName,'ConfigSim');
+            results = sim(obj.modelName, 'CaptureErrors', 'on','timeout', 120 ); %'StartTime','0','StopTime','10','FixedStep',num2str(dt));
             %Other parameters to consider 
             % 'CaptureErrors', 'on' -> results hold error in metadata
             % 'timeout', '1000' -> results hold error in metadata
