@@ -1,8 +1,8 @@
 classdef SimulationParameter
     properties
         duration = 5;
-        f_final = 220;
-        f_start = 200;
+        f_final = 120;
+        f_start = 100;
         f_time_step = 3;
         dt = 0.0001;
         

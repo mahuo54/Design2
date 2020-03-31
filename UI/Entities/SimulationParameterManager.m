@@ -142,13 +142,13 @@ classdef SimulationParameterManager < handle
                 simParams.polarite = parameters(6);%degree or rad  
                 simParams.position_centre = parameters(3);
                 simParams.actuateur_force_magnetique = parameters(12);
-                simParams.actuateur_circuitRL_s      = parameters(12);
-                simParams.capteur_R3                 = parameters(13);
-                simParams.circuit_passe_haut         = parameters(14);
-                simParams.circuit_passe_bas          = parameters(15);
-                simParams.regulateur_gain            = parameters(16);
-                simParams.servoclef_clef             = parameters(17);
-                simParams.freq_mes_transfer          = parameters(18);
+                simParams.actuateur_circuitRL_s      = parameters(13);
+                simParams.capteur_R3                 = parameters(14);
+                simParams.circuit_passe_haut         = parameters(15);
+                simParams.circuit_passe_bas          = parameters(16);
+                simParams.regulateur_gain            = parameters(17);
+                simParams.servoclef_clef             = parameters(18);
+                simParams.freq_mes_transfer          = parameters(19);
                 SimulationParametersArray(i) = simParams; 
             end
         end

@@ -19,7 +19,7 @@ classdef AnimationCordeCreator
             
             x = 1:N;
             xi = linspace(0, N+1, N*6);
-            ymax = 1.25*max(max(max(abs(datas.Data)))); %0.003
+%             ymax = 1.25*max(max(max(abs(datas.Data)))); %0.003
 %             figure(fig);
             
             for k = 1 : animationTimeStepIdx : length(datas.Time)
@@ -29,17 +29,16 @@ classdef AnimationCordeCreator
                 y = datas.Data(k,x);
                 yi = interp1([0 x N+1], [0 y 0], xi, 'spline', 'extrap');
                 plot(fig, xi, yi, '-r');
-                title('Animation de la corde');
-                hold off;
-                grid;
-                xlim([0 N+1]);
-                ylim([-1*ymax ymax]);
-                xlabel('Segments de corde');
-                ylabel('Position');
-                drawnow;
+%                 title('Animation de la corde');
+%                 hold off;
+%                 grid;
+%                 xlim([0 N+1]);
+%                 ylim([-1*ymax ymax]);
+%                 xlabel('Segments de corde');
+%                 ylabel('Position');
+%                 drawnow;
                 pause(waitTime);
             end
-            hold off
         end
     end
 end
