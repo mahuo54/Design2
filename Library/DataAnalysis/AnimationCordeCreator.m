@@ -36,7 +36,7 @@ classdef AnimationCordeCreator
 %                 ylim([-1*ymax ymax]);
 %                 xlabel('Segments de corde');
 %                 ylabel('Position');
-%                 drawnow;
+                drawnow limitrate;
                 pause(waitTime);
             end
         end

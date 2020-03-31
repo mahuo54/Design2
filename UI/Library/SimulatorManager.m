@@ -15,6 +15,9 @@ classdef SimulatorManager < handle
             end           
             results = obj.resultsByParameter;
         end
+        function result = GetLatestResult(obj) 
+            result = obj.resultsByParameter{length(obj.resultsByParameter)};
+        end
     end
 end
 
