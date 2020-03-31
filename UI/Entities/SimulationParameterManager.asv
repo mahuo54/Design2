@@ -64,20 +64,6 @@ classdef SimulationParameterManager < handle
                length(obj.freq_mes_transfer            );
         end
         
-        function varyingParams = GetVaryingParam(obj)
-            p = properties(obj);
-            varyingParams = [];
-            for i = 1:length(p)
-                if(p(i)=="x_0" || p(i)=="v_0")
-                    continue;
-                end
-                s = strcat('length(app.SimulationParams.', p(i), ')');
-                if(eval(s{1}) > 1)
-                    varyingParams = [varyingParams p(i)];
-                end
-            end
-        end
-        
         function SetToDefault(obj)
             defaultParameter = SimulationParameter();
             obj.Frequence_final = defaultParameter.f_final;
@@ -266,8 +252,8 @@ classdef SimulationParameterManager < handle
                     valueStr = param.f_time_step;
                 otherwise
                     ME = MException('SimulationParamterManager:InvalidPropertyName', ...
-                        'Variable %s invalid',propertyName);
-                    throw(ME);
+                        'Variable %s not found',str);
+                    throw(ME)
             end
             valueStr = num2str(valueStr);
         end

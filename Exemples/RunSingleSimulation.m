@@ -32,3 +32,7 @@ idx_actuateur = parameters.GetIndexActuateur();
 % systèmes Simulinks pour obtenir les résultats. Simple à faire par la
 % suite.
 
+%{'Id' 'Succès' 'Temps' 'Justesse' 'Vitesse d''accord'}
+
+
+
