@@ -28,6 +28,9 @@ classdef SystemSimulator < handle
             % 'CaptureErrors', 'on' -> results hold error in metadata
             % 'timeout', '1000' -> results hold error in metadata
         end
+        function Stop(obj)
+            set_param(obj.modelName, 'SimulationCommand', 'stop');
+        end
     end
     methods (Access = private)
         function SetParameter(obj, model, simulationParameter)

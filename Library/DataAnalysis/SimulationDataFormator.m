@@ -12,9 +12,11 @@ classdef SimulationDataFormator < handle
         function obj = SimulationDataFormator() %Thingy to calculate score and all
 
         end       
-        function SetSimulation(obj, params, resultByParameter)
+        function SetSimulation(obj, params)
             obj.SetColumnNames(params);
-            obj.SetDataCellsTable(resultByParameter);
+        end
+        function SetResults(obj, resultByParameter)
+            obj.SetDataCellsTable(resultByParameter);            
         end
     end
     methods (Access = public, Static)
