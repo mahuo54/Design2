@@ -71,7 +71,7 @@ classdef SimulationParameterManager < handle
                 if(p(i)=="x_0" || p(i)=="v_0")
                     continue;
                 end
-                s = strcat('length(app.SimulationParams.', p(i), ')');
+                s = strcat('length(obj.', p(i), ')');
                 if(eval(s{1}) > 1)
                     varyingParams = [varyingParams p(i)];
                 end

@@ -5,8 +5,9 @@ paramsArray = SimulationParameterManager();
 %d'énumérer l'ensemble des combinaisons. Par défaut, il tient seulement les
 %paramètres par SimulationParameter.
 
-paramsArray.pos_actuateur_relative = 0:0.25:1; 
-paramsArray.pos_capteur_relative = 0:0.25:1; 
+% paramsArray.pos_actuateur_relative = 0:0.25:1; 
+% paramsArray.pos_capteur_relative = 0:0.25:1; 
+paramsArray.Frequence_final = 100:10:140;
 % Attention, les données relatives doivent être entre 0 et 1. Le UI va
 % éventuellement protéger contre des valeurs autres, mais pas cet objet.
 
