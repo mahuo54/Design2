@@ -38,6 +38,12 @@ classdef SimulatorManager < handle
             obj.flagStopSimulation = true;
             obj.systemSimulator.Stop();
         end
+        function SetAutoEntretien(obj, ShouldBeActivated)
+            obj.systemSimulator.SetAutoEntretien(ShouldBeActivated);
+        end
+        function SetAutoAccord(obj, ShouldBeActivated)
+            obj.systemSimulator.SetAutoAccord(ShouldBeActivated);
+        end
         function add_listener_formator(obj, simulationDataFormator)
             addlistener(obj, 'SingleSimulationFinish', @simulationDataFormator.SingleSimulationFinishHandler);
         end

@@ -31,6 +31,12 @@ classdef SystemSimulator < handle
         function Stop(obj)
             set_param(obj.modelName, 'SimulationCommand', 'stop');
         end
+        function SetAutoEntretien(obj, ShouldBeActivated)
+%             set_param(obj.modelName, 'SimulationCommand', 'stop');
+        end
+        function SetAutoAccord(obj, ShouldBeActivated)
+%             set_param(obj.modelName, 'SimulationCommand', 'stop');
+        end
     end
     methods (Access = private)
         function SetParameter(obj, model, simulationParameter)
