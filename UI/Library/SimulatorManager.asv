@@ -27,7 +27,7 @@ classdef SimulatorManager < handle
                 PrintStatusDelegate(sprintf('Simulation en cours (%i/%i)',i,N));
                 result = obj.systemSimulator.RunSimulation(simulationParamArrays(i));
                 obj.resultsByParameter{i} = {simulationParamArrays(i), result};
-                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i), result));
+                notify(obj
             end           
             results = obj.resultsByParameter;
         end
@@ -37,9 +37,6 @@ classdef SimulatorManager < handle
         function Stop(obj)
             obj.flagStopSimulation = true;
             obj.systemSimulator.Stop();
-        end
-        function add_listener_formator(obj, simulationDataFormator)
-            addlistener(obj, 'SingleSimulationFinish', @simulationDataFormator.SingleSimulationFinishHandler);
         end
     end
 end

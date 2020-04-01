@@ -6,17 +6,31 @@ classdef SimulationDataFormator < handle
         ColumnName;
         rowsDatas;
         varyingParams;
+        FinishAddRowDelegate;
     end
     
     methods
-        function obj = SimulationDataFormator() %Thingy to calculate score and all
-
+        function obj = SimulationDataFormator(FinishAddRowDelegate) %Thingy to calculate score and all
+            if(nargin == 0)
+               FinishAddRowDelegate = @obj.DoNothing; 
+            end
+            obj.FinishAddRowDelegate = FinishAddRowDelegate;
         end       
         function SetSimulation(obj, params)
             obj.SetColumnNames(params);
         end
-        function SetResults(obj, resultByParameter)
-            obj.SetDataCellsTable(resultByParameter);            
+%         function SetResults(obj, resultByParameter)
+%             obj.SetDataCellsTable(resultByParameter);            
+%         end
+        
+        function SingleSimulationFinishHandler(obj,eventSrc, eventData)
+            AddRow(obj, eventData.result, eventData.param);
+            obj.FinishAddRowDelegate(obj.rowsDatas);
+        end
+        
+        function Reset(obj)
+            obj.rowsDatas = {};
+            obj.ColumnName = SimulationDataFormator.GetDefaultColumnName();
         end
     end
     methods (Access = public, Static)
@@ -33,6 +47,29 @@ classdef SimulationDataFormator < handle
             else
                 obj.ColumnName = SimulationDataFormator.GetDefaultColumnName();
             end            
+        end
+        function AddRow(obj, result, params)
+            i = size(obj.rowsDatas, 1)+1; %TODO - Check if correct idx 1/2
+            if(isempty(result.ErrorMessage))
+                successStr = 'Oui';
+            else
+                successStr = 'Non';
+            end
+            rowEnd = {successStr ...
+                num2str(result.SimulationMetadata.TimingInfo.TotalElapsedWallTime) ...
+                '?' '?'};
+            %create the row. first try it without the varying params
+            if(~isempty(obj.varyingParams))
+                paramRow = {};
+                for p = 1:length(obj.varyingParams)
+                    paramValueStr = SimulationParameterManager.GetParameterValueStr(obj.varyingParams{p}, params); %are they the same though? fuuuuckkk. same with the name actually... get method to return the label name and the param value.
+                    paramRow = [paramRow paramValueStr];
+                end
+                row = [num2str(i) paramRow rowEnd];
+            else
+                row = [num2str(i) rowEnd];
+            end
+            obj.rowsDatas = [obj.rowsDatas; row];
         end
         function SetDataCellsTable(obj, resultsByParameter)
             %Populate rows.
@@ -62,6 +99,9 @@ classdef SimulationDataFormator < handle
                 obj.rowsDatas = [obj.rowsDatas; row];
             end
 %             set(app.ResultUITable, 'data', rowsDatas);
+        end
+        function DoNothing(obj,rowsDatas)
+            %I'm a stupid language that can't see to have empty delegate.
         end
     end
 end
