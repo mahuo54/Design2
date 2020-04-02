@@ -10,6 +10,7 @@ simulator = SystemSimulator(); %Rien n'est modifiable sur le simulator.
 % open_system('SystemeCompletProcedural/Position_corde'); 
 % open_system('SystemeCompletProcedural/Position_captée'); 
 % open_system('SystemeCompletProcedural/Tension_corde'); %Je vais
+% open_system('SystemeCompletProcedural/Freq'); %Je vais
 result = simulator.RunSimulation(parameters);
 
 %Quel est l'index de l'actuateur???

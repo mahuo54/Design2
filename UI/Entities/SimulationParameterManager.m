@@ -126,7 +126,18 @@ classdef SimulationParameterManager < handle
             obj.regulateur_gain             = defaultParameter.regulateur_gain  ;
             obj.servoclef_clef              = defaultParameter.servoclef_clef  ;
             obj.freq_mes_transfer           = defaultParameter.freq_mes_transfer  ;
-            fromage;
+            obj.clockFreq	            = defaultParameter.clockFreq;
+            obj.servoClefVitesseMax     = defaultParameter.servoClefVitesseMax;
+            obj.freq_coupure            = defaultParameter.freq_coupure;
+            obj.gainVoltageAngle        = defaultParameter.gainVoltageAngle;
+            obj.Circuit_Va              = defaultParameter.Circuit_Va;
+            obj.Circuit_Vb              = defaultParameter.Circuit_Vb;
+            obj.tensionAjustable        = defaultParameter.tensionAjustableFactor*5;
+            obj.capteur_courantMax      = defaultParameter.capteur_courantMax;
+            obj.IsPolarisationInverted 	= defaultParameter.IsPolarisationInverted;
+            obj.regulateur_accordI      = defaultParameter.regulateur_accordI ;
+
+            
         end
         
         function SimulationParametersArray = EnumerateSimulationParameters(obj)
@@ -179,7 +190,7 @@ classdef SimulationParameterManager < handle
                 simParams.corde.T_0 = parameters(11);
                 simParams.pos_actuateur_relative = parameters(4);
                 simParams.pos_capteur_relative = parameters(5);
-                simParams.polarite = parameters(6);%degree or rad  
+%                 simParams.polarite = parameters(6);%deleted 
                 simParams.position_centre = parameters(3);
                 simParams.actuateur_force_magnetique = parameters(12);
                 simParams.actuateur_circuitRL_s      = parameters(13);
