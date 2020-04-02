@@ -30,14 +30,14 @@ classdef SimulationParameter
         
         %New variables
         clock = 16000;
-        servoClefVitesseMax = 1000;
-        freq_coupure = 0.03;
-        gainVoltageAngle = 800;
-        Circuit_Va = 2.563;
-        Circuit_Vb = 2.312;
-        tensionAjustableFactor = 1; %%%1=5V
-        capteur_courantMax = 0.0218;
-        IsPolarisationInverted = true;
+        servoClefVitesseMax;
+        freq_coupure;
+        gainVoltageAngle;
+        Circuit_Va;
+        Circuit_Vb;
+        tensionAjustableFactor; %%%
+        capteur_courantMax;
+        IsPolarisationInverted;
     end
     methods
         function obj = SimulationParameter()

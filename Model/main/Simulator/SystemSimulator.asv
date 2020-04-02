@@ -113,9 +113,6 @@ classdef SystemSimulator < handle
             capteur_R3_h = Simulink.findBlocks(capteur_h,'Name','R3');
             set_param(capteur_R3_h, 'Gain',num2str(simulationParameter.capteur_R3));
             
-            courant_max_h = Simulink.findBlocks(capteur_h,'Name','Courant max');
-            set_param(courant_max_h, 'Gain',num2str(simulationParameter.capteur_courantMax)); %TOADD
-            
             passe_haut_h = Simulink.findBlocks(capteur_h,'Name','Passe-haut centré');
             set_param(passe_haut_h,'Numerator', ['[' num2str(simulationParameter.circuit_passe_haut) ' 0]']);
             set_param(passe_haut_h,'Denominator', ['[' num2str(simulationParameter.circuit_passe_bas) ' 1]']);
@@ -123,11 +120,9 @@ classdef SystemSimulator < handle
             tension_ajustable_h = Simulink.findBlocks(capteur_h,'Name','Tension ajustable');
             set_param(tension_ajustable_h, 'Gain',num2str(simulationParameter.tensionAjustableFactor)); %TOADD - in UI 5 = 1 in param
             
-            Va_h = Simulink.findBlocks(capteur_h,'Name','Va');
-            set_param(Va_h, 'Value',num2str(simulationParameter.Circuit_Va)); %TOADD
+            tension_ajustable_h = Simulink.findBlocks(capteur_h,'Name','Va');
+            set_param(tension_ajustable_h, 'Gain',num2str(simulationParameter.Circuit_Va)); %TOADD - in UI 5 = 1 in param
             
-            Vb_h = Simulink.findBlocks(capteur_h,'Name','Vb');
-            set_param(Vb_h, 'Value',num2str(simulationParameter.Circuit_Vb)); %TOADD            
             
             %% Initial Tension
             T_0_h = Simulink.findBlocks(model,'Name','Tension initiale');
@@ -169,9 +164,7 @@ classdef SystemSimulator < handle
             mesure_freq_h = Simulink.findBlocks(model, 'Name','Mesure fréquence');
             mesure_fre_transFct_h = Simulink.findBlocks(mesure_freq_h, 'Name','Transfer Fcn');
             set_param(mesure_fre_transFct_h, 'Denominator',['[' num2str(simulationParameter.freq_mes_transfer) ' 1]' ]);
-            clock_h =  Simulink.findBlocks(mesure_freq_h, 'Name','Clock');
-            set_param(clock_h, 'Decimation',num2str(simulationParameter.GetClockDecimation())); %TOADD AND CHECK
-
+            
         end
         
 %         function idx = GetIndex(~,x,N)
