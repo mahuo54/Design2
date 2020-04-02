@@ -31,8 +31,8 @@ classdef SystemSimulator < handle
         function Stop(obj)
             set_param(obj.modelName, 'SimulationCommand', 'stop');
         end
-        function SetAutoEntretien(~, ShouldBeActivated)
-            actuateur_h = Simulink.findBlocks(model, 'Name','Actuateur');
+        function SetAutoEntretien(obj, ShouldBeActivated)
+            actuateur_h = Simulink.findBlocks(obj.modelName, 'Name','Actuateur');
             actuateur_activated_h = Simulink.findBlocks(actuateur_h, 'Name','ActuateurActivated');
             if(ShouldBeActivated)
                 set_param(actuateur_activated_h, 'Gain','1'); 
@@ -40,8 +40,8 @@ classdef SystemSimulator < handle
                 set_param(actuateur_activated_h, 'Gain','0');
             end
         end
-        function SetAutoAccord(~, ShouldBeActivated)
-            regulateur_h = Simulink.findBlocks(model, 'Name','Régulateur');
+        function SetAutoAccord(obj, ShouldBeActivated)
+            regulateur_h = Simulink.findBlocks(obj.modelName, 'Name','Régulateur');
             regulateur_autoaccord_h = Simulink.findBlocks(regulateur_h, 'Name','Auto-accord');
             if(ShouldBeActivated)
                 set_param(regulateur_autoaccord_h, 'Gain','1');
