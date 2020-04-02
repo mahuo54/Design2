@@ -98,11 +98,11 @@ classdef SystemSimulator < handle
             set_param(actuateur_fm_h, 'Gain',num2str(simulationParameter.actuateur_force_magnetique));
             actuateur_RL_h = Simulink.findBlocks(actuateur_h, 'Name','Circuit RL');
             set_param(actuateur_RL_h, 'Denominator', ['[' num2str(simulationParameter.actuateur_circuitRL_s) ' 263]']);
-            actuateur_pol_h = Simulink.findBlocks(actuateur_h, 'Name','Circuit RL');
+            actuateur_pol_h = Simulink.findBlocks(actuateur_h, 'Name','Polarisation');
             if(simulationParameter.IsPolarisationInverted) %TOADD
-                set_param(actuateur_pol_h,'Gain','-1');
-            else
                 set_param(actuateur_pol_h,'Gain','1');
+            else
+                set_param(actuateur_pol_h,'Gain','-1');
             end
             %% Config capteur
             idx_capteur = simulationParameter.GetIndexCapteur();
@@ -123,10 +123,10 @@ classdef SystemSimulator < handle
             tension_ajustable_h = Simulink.findBlocks(capteur_h,'Name','Tension ajustable');
             set_param(tension_ajustable_h, 'Gain',num2str(simulationParameter.tensionAjustableFactor)); %TOADD - in UI 5 = 1 in param
             
-            Va_h = Simulink.findBlocks(capteur_h,'Name','Va');
+            Va_h = Simulink.findBlocks(capteur_h,'Name','Va_cst');
             set_param(Va_h, 'Value',num2str(simulationParameter.Circuit_Va)); %TOADD
             
-            Vb_h = Simulink.findBlocks(capteur_h,'Name','Vb');
+            Vb_h = Simulink.findBlocks(capteur_h,'Name','Vb_cst');
             set_param(Vb_h, 'Value',num2str(simulationParameter.Circuit_Vb)); %TOADD            
             
             %% Initial Tension
@@ -151,7 +151,7 @@ classdef SystemSimulator < handle
             regulateur_gain_h = Simulink.findBlocks(regulateur_h, 'Name','Gain');
             set_param(regulateur_gain_h, 'Gain',num2str(simulationParameter.regulateur_gain));
             regulateur_gain_h = Simulink.findBlocks(regulateur_h, 'Name','I');
-            set_param(regulateur_gain_h, 'Numerator',num2str(simulationParameter.regulateur_accordI));
+            set_param(regulateur_gain_h, 'Numerator',num2str(simulationParameter.regulateur_accordI)); %ToAdd
            
             %% Servoclef
             servoclef_h = Simulink.findBlocks(model, 'Name','Servoclef');
@@ -163,7 +163,7 @@ classdef SystemSimulator < handle
             set_param(servoclef_FctTrans_h, 'Denominator', ['[' num2str(simulationParameter.freq_coupure) ' 1]' ]); %TOADD
             
             servoclef_vMax_h = Simulink.findBlocks(servoclef_h, 'Name','Vitesse maximale');
-            set_param(servoclef_vMax_h, 'Upper limit', num2str(simulationParameter.servoClefVitesseMax)); %TOADD
+            set_param(servoclef_vMax_h, 'UpperLimit', num2str(simulationParameter.servoClefVitesseMax)); %TOADD
             
             %% Mesure fréquence
             mesure_freq_h = Simulink.findBlocks(model, 'Name','Mesure fréquence');

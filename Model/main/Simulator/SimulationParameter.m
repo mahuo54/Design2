@@ -11,11 +11,7 @@ classdef SimulationParameter
         position_centre = 0.001;% 0.00143
         pos_actuateur_relative = 0.75;
         pos_capteur_relative = 0.25;
-        polarite = 180;%degree or rad    
-        
-%         isImpulseOn = false;
-%         impulse_relative_position = 0.5;
-        
+
         actuateur_force_magnetique = 11.65;
         actuateur_circuitRL_s = 0.07668;
         
@@ -28,8 +24,8 @@ classdef SimulationParameter
         servoclef_clef = -0.384;
         freq_mes_transfer = 0.1;
         
-        %New variables
-        clock = 16000;
+        %New variables - done
+        clockFreq = 16000; %???
         servoClefVitesseMax = 1000;
         freq_coupure = 0.03;
         gainVoltageAngle = 800;
@@ -38,6 +34,7 @@ classdef SimulationParameter
         tensionAjustableFactor = 1; %%%1=5V
         capteur_courantMax = 0.0218;
         IsPolarisationInverted = true;
+        regulateur_accordI = -0.000271;
     end
     methods
         function obj = SimulationParameter()
@@ -61,6 +58,13 @@ classdef SimulationParameter
         end
         function idx = GetIndexCapteur(obj)
             idx = obj.GetIndex(obj.pos_capteur_relative);
+        end
+        function decimation = GetClockDecimation(obj)
+            if(obj.clockFreq >= 1000)
+                decimation = 10;
+            else
+                decimation = ceil(1000/obj.clockFreq);
+            end
         end
     end
     methods (Access = private)

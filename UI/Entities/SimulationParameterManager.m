@@ -6,7 +6,6 @@ classdef SimulationParameterManager < handle
         position_centre (1,:) double;
         pos_actuateur_relative (1,:) double;
         pos_capteur_relative (1,:) double;
-        polarite (1,:) double;%degree or rad ??? don't know where it is in the model yet.   
                 
         LinearDensity (1,:) double;
         Length (1,:) double;
@@ -29,12 +28,22 @@ classdef SimulationParameterManager < handle
         x_0 (1,:) double; %Semble pertinent seulement pour une seule simulation, difficile de faire un array d'array dans le UI...
         v_0 (1,:) double;
         
-        isImpulseOn logical;
-        impulse_relative_position double;
-        
+
         Duration double; %Basta ya!        
         Frequence_initial double;
         Frequence_time_step double;
+        
+        %ADD NEW VARIABLE
+        clockFreq (1,:) double;
+        servoClefVitesseMax  (1,:) double;
+        freq_coupure  (1,:) double;
+        gainVoltageAngle (1,:) double;
+        Circuit_Va  (1,:) double;
+        Circuit_Vb  (1,:) double;
+        tensionAjustable  (1,:) double;
+        capteur_courantMax (1,:) double;
+        IsPolarisationInverted  logical;
+        regulateur_accordI  (1,:) double;
     end
     
     methods
@@ -42,13 +51,12 @@ classdef SimulationParameterManager < handle
             obj.SetToDefault();
         end
         
-        function N = GetNumberOfSimulation(obj)
+        function N = GetNumberOfSimulation(obj) %Should have gone through reflection.. bit late though
            N =  length(obj.Frequence_final				)*...
                length(obj.dt                           )*...
                length(obj.position_centre              )*...
                length(obj.pos_actuateur_relative       )*...
                length(obj.pos_capteur_relative         )*...
-               length(obj.polarite                     )*...
                length(obj.LinearDensity                )*...
                length(obj.Length                       )*...
                length(obj.frottement                   )*...
@@ -61,7 +69,17 @@ classdef SimulationParameterManager < handle
                length(obj.circuit_passe_bas            )*...
                length(obj.regulateur_gain              )*...
                length(obj.servoclef_clef               )*...
-               length(obj.freq_mes_transfer            );
+               length(obj.freq_mes_transfer            )*...
+               length(obj.clockFreq	)*...
+               length(obj.servoClefVitesseMax 	)*...
+               length(obj.freq_coupure 	)*...
+               length(obj.gainVoltageAngle	)*...
+               length(obj.Circuit_Va 	)*...
+               length(obj.Circuit_Vb 	)*...
+               length(obj.tensionAjustable 	)*...
+               length(obj.capteur_courantMax	)*...
+               length(obj.IsPolarisationInverted 	)*...
+               length(obj.regulateur_accordI 	);
         end
         
         function varyingParams = GetVaryingParam(obj)
@@ -86,9 +104,9 @@ classdef SimulationParameterManager < handle
             obj.position_centre = defaultParameter.position_centre;
             obj.pos_actuateur_relative = defaultParameter.pos_actuateur_relative ;
             obj.pos_capteur_relative = defaultParameter.pos_capteur_relative;
-            obj.polarite = defaultParameter.polarite;
+%             obj.polarite = defaultParameter.polarite; %deleted
             
-            obj.LinearDensity = defaultParameter.corde.M/defaultParameter.corde.L; %Vericarlo que escribimos en el informe
+            obj.LinearDensity = defaultParameter.corde.M/defaultParameter.corde.L;
             obj.Length = defaultParameter.corde.L;
             obj.frottement = defaultParameter.corde.b;
             obj.N = defaultParameter.corde.N;
@@ -96,10 +114,7 @@ classdef SimulationParameterManager < handle
 
             obj.x_0 = defaultParameter.corde.x_0;
             obj.v_0 = defaultParameter.corde.v_0;
-            
-            obj.isImpulseOn = defaultParameter.isImpulseOn;
-            obj.impulse_relative_position = defaultParameter.impulse_relative_position;
-            
+%        
             obj.Duration = defaultParameter.duration;
             obj.Frequence_initial = defaultParameter.f_start;
             obj.Frequence_time_step = defaultParameter.f_time_step;
@@ -111,6 +126,7 @@ classdef SimulationParameterManager < handle
             obj.regulateur_gain             = defaultParameter.regulateur_gain  ;
             obj.servoclef_clef              = defaultParameter.servoclef_clef  ;
             obj.freq_mes_transfer           = defaultParameter.freq_mes_transfer  ;
+            fromage;
         end
         
         function SimulationParametersArray = EnumerateSimulationParameters(obj)
@@ -119,7 +135,7 @@ classdef SimulationParameterManager < handle
                 obj.position_centre             ,...
                 obj.pos_actuateur_relative      ,...
                 obj.pos_capteur_relative        ,...
-                obj.polarite                    ,...
+                0                    ,... %deleted polarite. Now I don't want to reindex everything...
                 obj.LinearDensity               ,...
                 obj.Length                      ,...
                 obj.frottement                  ,...
@@ -132,7 +148,17 @@ classdef SimulationParameterManager < handle
                 obj.circuit_passe_bas           ,...
                 obj.regulateur_gain             ,...
                 obj.servoclef_clef              ,...
-                obj.freq_mes_transfer           }; %cell array with N vectors to combine
+                obj.freq_mes_transfer           ,...
+                obj.clockFreq	,... %idx = 20
+                obj.servoClefVitesseMax 	,...
+                obj.freq_coupure 	,...
+                obj.gainVoltageAngle	,...
+                obj.Circuit_Va 	,...
+                obj.Circuit_Vb 	,...
+                obj.tensionAjustable 	,...
+                obj.capteur_courantMax	,...
+                obj.IsPolarisationInverted 	,...
+                obj.regulateur_accordI }; %cell array with N vectors to combine
             combinations = SimulationParameterManager.GetCombinations(elements);
             
             for i = size(combinations,1):-1:1 %Allocation starts at the end
@@ -163,6 +189,16 @@ classdef SimulationParameterManager < handle
                 simParams.regulateur_gain            = parameters(17);
                 simParams.servoclef_clef             = parameters(18);
                 simParams.freq_mes_transfer          = parameters(19);
+                simParams.clockFreq					 = parameters(20);
+                simParams.servoClefVitesseMax        = parameters(21);
+                simParams.freq_coupure               = parameters(22);
+                simParams.gainVoltageAngle           = parameters(23);
+                simParams.Circuit_Va                 = parameters(24);
+                simParams.Circuit_Vb                 = parameters(25);
+                simParams.tensionAjustableFactor     = parameters(26)/5;
+                simParams.capteur_courantMax         = parameters(27);
+                simParams.IsPolarisationInverted     = parameters(28);
+                simParams.regulateur_accordI         = parameters(29);
                 SimulationParametersArray(i) = simParams; 
             end
         end
@@ -196,7 +232,7 @@ classdef SimulationParameterManager < handle
                 case 'actuateur_force_magnetique'
                     label = 'Gain voltage/force';
                 case 'actuateur_circuitRL_s'
-                    label = 'Fréquence de coupure';
+                    label = 'Actuateur - Fréq. de coupure';
                 case 'capteur_R3'
                     label = 'Gain courant/voltage';
                 case 'circuit_passe_haut'
@@ -215,6 +251,30 @@ classdef SimulationParameterManager < handle
                     label = 'Fréquence initiale';
                 case 'Frequence_time_step'
                     label = 'Temps consigne';
+                case 'clockFreq'
+                    label = 'Référence fréquence';
+                case 'servoClefVitesseMax'
+                    label = 'Vitesse maximale clef';
+                case 'freq_coupure'
+                    label = 'Clef - Fréq. de coupure';
+                case 'gainVoltageAngle'
+                    label = 'Gain Voltage/Angle';
+                case 'Circuit_Va'
+                    label = 'Hystérésis Va';
+                case 'Circuit_Vb'
+                    label = 'Hystérésis Vb';
+                case 'tensionAjustable'
+                    label = 'Limite de tension';
+                case 'capteur_courantMax'
+                    label = 'Gain lumière/courant';
+                case 'IsPolarisationInverted'
+                    label = 'Polarisation';
+                case 'regulateur_accordI'
+                    label = 'Accord I';
+                otherwise
+                    ME = MException('SimulationParamterManager:InvalidPropertyName', ...
+                        'Variable %s unknown',propertyName);
+                    throw(ME);
             end
         end
         
@@ -264,6 +324,26 @@ classdef SimulationParameterManager < handle
                     valueStr = param.f_start;
                 case 'Frequence_time_step'
                     valueStr = param.f_time_step;
+                case 'clockFreq'
+                    valueStr = param.clockFreq;
+                case 'servoClefVitesseMax'
+                    valueStr = param.servoClefVitesseMax;
+                case 'freq_coupure'
+                    valueStr = param.freq_coupure;
+                case 'gainVoltageAngle'
+                    valueStr = param.gainVoltageAngle;
+                case 'Circuit_Va'
+                    valueStr = param.Circuit_Va;
+                case 'Circuit_Vb'
+                    valueStr = param.Circuit_Vb;
+                case 'tensionAjustable'
+                    valueStr = param.tensionAjustableFactor*5;
+                case 'capteur_courantMax'
+                    valueStr = param.capteur_courantMax;
+                case 'IsPolarisationInverted'
+                    valueStr = param.IsPolarisationInverted;
+                case 'regulateur_accordI'
+                    valueStr = param.regulateur_accordI;
                 otherwise
                     ME = MException('SimulationParamterManager:InvalidPropertyName', ...
                         'Variable %s invalid',propertyName);
