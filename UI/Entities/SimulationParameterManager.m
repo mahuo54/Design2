@@ -262,6 +262,7 @@ classdef SimulationParameterManager < handle
                     label = 'Fréquence initiale';
                 case 'Frequence_time_step'
                     label = 'Temps consigne';
+                    
                 case 'clockFreq'
                     label = 'Référence fréquence';
                 case 'servoClefVitesseMax'
