@@ -27,7 +27,7 @@ classdef SimulatorManager < handle
                 PrintStatusDelegate(sprintf('Simulation en cours (%i/%i)',i,N));
                 result = obj.systemSimulator.RunSimulation(simulationParamArrays(i));
                 obj.resultsByParameter{i} = {simulationParamArrays(i), result};
-                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i), result));
+                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i), result, i));
             end           
             results = obj.resultsByParameter;
         end
