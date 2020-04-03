@@ -49,8 +49,43 @@ classdef SystemSimulator < handle
                 set_param(regulateur_autoaccord_h, 'Gain','0');
             end
         end
-        function SetNoiseRandom(obj, isOn, w, A)
-            
+        function SetNoiseRandom(obj, isOn, var, mean)
+            noiseBlockH = Simulink.findBlocks(obj.modelName, 'Name','Random Number');
+            if(isOn)
+                set_param(noiseBlockH, 'Variance',num2str(var));
+                set_param(noiseBlockH, 'Mean',num2str(mean));
+            else
+                set_param(noiseBlockH, 'Variance',num2str(0));
+                set_param(noiseBlockH, 'Mean',num2str(0));
+            end
+        end
+        function SetSineNoise(obj, isOn, w, A)
+            noiseBlockH = Simulink.findBlocks(obj.modelName, 'Name','Sine Wave');
+            if(isOn)
+                set_param(noiseBlockH, 'Amplitude',num2str(A));
+                set_param(noiseBlockH, 'Frequency',num2str(w));
+            else
+                set_param(noiseBlockH, 'Amplitude',num2str(0));
+                set_param(noiseBlockH, 'Frequency',num2str(w));
+            end
+        end
+        function SetOffSet(obj, isOn, x)
+            noiseBlockH = Simulink.findBlocks(obj.modelName, 'Name','offset');
+           if(isOn)
+                set_param(noiseBlockH, 'Value',num2str(x));
+            else
+                set_param(noiseBlockH, 'Value',num2str(0));
+            end
+        end
+        function SetManualFrequence(obj, isOn, freq)
+            freqSwitchH = Simulink.findBlocks(obj.modelName, 'Name','manual consigne switch');
+            if(isOn)
+                set_param(freqSwitchH, 'sw','0');
+            else
+                set_param(freqSwitchH, 'sw','1')
+            end
+            manualFreqH = Simulink.findBlocks(obj.modelName, 'Name','Consigne_f_cst');
+            set_param(manualFreqH, 'Value',num2str(freq));
         end
     end
     methods (Access = private)

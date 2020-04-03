@@ -44,6 +44,20 @@ classdef SimulatorManager < handle
         function SetAutoAccord(obj, ShouldBeActivated)
             obj.systemSimulator.SetAutoAccord(ShouldBeActivated);
         end
+         function SetNoiseRandom(obj, isOn, var, mean)
+            obj.systemSimulator.SetNoiseRandom(isOn, var, mean);
+
+        end
+        function SetSineNoise(obj, isOn, w, A)
+            obj.systemSimulator.SetSineNoise(isOn, w, A);
+        end
+        function SetOffSet(obj, isOn, x)
+            obj.systemSimulator.SetOffSet(isOn,x);
+        end
+        function SetManualFrequence(obj, isOn, freq)
+            obj.systemSimulator.SetManualFrequence(isOn, freq);
+        end
+        
         function add_listener_formator(obj, simulationDataFormator)
             addlistener(obj, 'SingleSimulationFinish', @simulationDataFormator.SingleSimulationFinishHandler);
         end

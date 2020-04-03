@@ -16,7 +16,7 @@ result = simulator.RunSimulation(parameters);
 %Quel est l'index de l'actuateur???
 idx_actuateur = parameters.GetIndexActuateur();
 
-% save('RunSingleSim.mat');
+save('RunSingleSim.mat');
 % 
 % load('RunSingleSim.mat');
 

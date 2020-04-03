@@ -44,6 +44,8 @@ classdef SimulationParameterManager < handle
         capteur_courantMax (1,:) double;
         IsPolarisationInverted  logical;
         regulateur_accordI  (1,:) double;
+        
+        simulationActionParameter SimulationActionParameter = SimulationActionParameter();
     end
     
     methods
@@ -79,7 +81,7 @@ classdef SimulationParameterManager < handle
                length(obj.tensionAjustable 	)*...
                length(obj.capteur_courantMax	)*...
                length(obj.IsPolarisationInverted 	)*...
-               length(obj.regulateur_accordI 	);
+               length(obj.regulateur_accordI);
         end
         
         function varyingParams = GetVaryingParam(obj)
