@@ -138,7 +138,8 @@ classdef SimulationParameterManager < handle
             obj.capteur_courantMax      = defaultParameter.capteur_courantMax;
             obj.IsPolarisationInverted 	= defaultParameter.IsPolarisationInverted;
             obj.regulateur_accordI      = defaultParameter.regulateur_accordI ;
-
+            
+            obj.simulationActionParameter = SimulationActionParameter();
             
         end
         
