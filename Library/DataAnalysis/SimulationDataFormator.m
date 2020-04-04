@@ -1,12 +1,12 @@
 classdef SimulationDataFormator < handle
     %SIMULATIONDATAFORMATOR Summary of this class goes here
     %   Detailed explanation goes here
-    
     properties
         ColumnName;
         rowsDatas;
         varyingParams;
         FinishAddRowDelegate;
+        MapVaryingParamsToValues;
     end
     
     methods
@@ -18,13 +18,15 @@ classdef SimulationDataFormator < handle
         end       
         function SetSimulation(obj, params)
             obj.SetColumnNames(params);
+            paramNames = params.GetVaryingParam();
+            obj.MapVaryingParamsToValues = containers.Map('KeyType','char','ValueType','any');
+            for i = 1:length(paramNames)
+                obj.MapVaryingParamsToValues(paramNames{i}) = eval(strcat('params.',paramNames{i}));
+            end
         end
-%         function SetResults(obj, resultByParameter)
-%             obj.SetDataCellsTable(resultByParameter);            
-%         end
         
         function SingleSimulationFinishHandler(obj,eventSrc, eventData)
-            AddRow(obj, eventData.result, eventData.param);
+            AddRow(obj, eventData.result, eventData.param, eventData.performance);
             obj.FinishAddRowDelegate(obj.rowsDatas);
         end
         
@@ -35,7 +37,7 @@ classdef SimulationDataFormator < handle
     end
     methods (Access = public, Static)
         function ColumnNames = GetDefaultColumnName()
-            ColumnNames  = {'Id' 'Succès' 'Temps' 'Justesse' 'Vitesse d''accord'};
+            ColumnNames  = {'Id' 'Succès' 'Temps' 'Justesse' 'Précision' 'Vitesse d''accord' 'A'};
         end
     end
     methods (Access = private)
@@ -48,7 +50,7 @@ classdef SimulationDataFormator < handle
                 obj.ColumnName = SimulationDataFormator.GetDefaultColumnName();
             end            
         end
-        function AddRow(obj, result, params)
+        function AddRow(obj, result, params, performance)
             i = size(obj.rowsDatas, 1)+1; %TODO - Check if correct idx 1/2
             if(isempty(result.ErrorMessage))
                 successStr = 'Oui';
@@ -57,7 +59,7 @@ classdef SimulationDataFormator < handle
             end
             rowEnd = {successStr ...
                 num2str(result.SimulationMetadata.TimingInfo.TotalElapsedWallTime) ...
-                '?' '?'};
+                num2str(performance.Justesse) num2str(performance.Precision) num2str(performance.Vitessse) num2str(performance.A)};
             %create the row. first try it without the varying params
             if(~isempty(obj.varyingParams))
                 paramRow = {};
@@ -71,35 +73,7 @@ classdef SimulationDataFormator < handle
             end
             obj.rowsDatas = [obj.rowsDatas; row];
         end
-        function SetDataCellsTable(obj, resultsByParameter)
-            %Populate rows.
-            obj.rowsDatas = {};
-            for i = 1:length(resultsByParameter)
-                result = resultsByParameter{i}{2};
-                params = resultsByParameter{i}{1};
-                if(isempty(result.ErrorMessage))
-                    successStr = 'Oui';
-                else
-                    successStr = 'Non';
-                end
-                rowEnd = {successStr ...
-                    num2str(result.SimulationMetadata.TimingInfo.TotalElapsedWallTime) ...
-                    '?' '?'};
-                %create the row. first try it without the varying params
-                if(~isempty(obj.varyingParams))
-                    paramRow = {};
-                    for p = 1:length(obj.varyingParams)
-                        paramValueStr = SimulationParameterManager.GetParameterValueStr(obj.varyingParams{p}, params); %are they the same though? fuuuuckkk. same with the name actually... get method to return the label name and the param value.
-                        paramRow = [paramRow paramValueStr];
-                    end
-                    row = [num2str(i) paramRow rowEnd];
-                else
-                    row = [num2str(i) rowEnd];
-                end
-                obj.rowsDatas = [obj.rowsDatas; row];
-            end
-%             set(app.ResultUITable, 'data', rowsDatas);
-        end
+      
         function DoNothing(obj,rowsDatas)
             %I'm a stupid language that can't see to have empty delegate.
         end

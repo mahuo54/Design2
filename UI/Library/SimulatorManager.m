@@ -2,7 +2,7 @@ classdef SimulatorManager < handle
     properties
         systemSimulator SystemSimulator;
         resultsByParameter;
-        
+        resultPerformanceAnalyser ResultPerformanceAnalyser = ResultPerformanceAnalyser();
         flagStopSimulation = false;
     end
     
@@ -26,8 +26,9 @@ classdef SimulatorManager < handle
                 end
                 PrintStatusDelegate(sprintf('Simulation en cours (%i/%i)',i,N));
                 result = obj.systemSimulator.RunSimulation(simulationParamArrays(i));
-                obj.resultsByParameter{i} = {simulationParamArrays(i), result};
-                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i), result, i));
+                performances = obj.resultPerformanceAnalyser.GetPerformance(result, simulationParamArrays(i));
+                obj.resultsByParameter{i} = {simulationParamArrays(i), result, performances};
+                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i), result, i, performances));
             end           
             results = obj.resultsByParameter;
         end

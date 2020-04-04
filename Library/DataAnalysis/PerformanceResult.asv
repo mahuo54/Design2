@@ -1,0 +1,26 @@
+classdef PerformanceResult   
+    properties
+        Justesse;
+        Precision;
+        A;
+        vitesse;
+    end
+    
+    methods
+        function obj = PerformanceResult(Justesse, Precision, A, Vitesse)
+            %PERFORMANCERESULT Construct an instance of this class
+            %   Detailed explanation goes here
+            obj.Justesse = Justesse;
+            obj.Precision = Precision;
+            obj.A = A;
+            obj.Vitesse = 
+        end
+        
+        function outputArg = method1(obj,inputArg)
+            %METHOD1 Summary of this method goes here
+            %   Detailed explanation goes here
+            outputArg = obj.Property1 + inputArg;
+        end
+    end
+end
+

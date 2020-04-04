@@ -1,0 +1,50 @@
+classdef ResultPerformanceAnalyser
+    
+    properties
+        performanceTimeConsidered double = 0.2;
+        errorFctHandle;
+    end
+    
+    methods
+        function obj = ResultPerformanceAnalyser(errorFctHandle)
+            if(nargin == 0)
+                errorFctHandle = @ResultPerformanceAnalyser.JustesseFromFreq;
+            end
+            obj.errorFctHandle = errorFctHandle;
+        end
+        function [A, justesse,precision, vitesse] = GetPerformance(obj, result, params)
+            if((params.duration - params.f_time_step) < obj.performanceTimeConsidered)
+                l = params.duration - params.f_time_step;
+            else
+                l = obj.performanceTimeConsidered;
+            end
+            N =  l/ params.dt;
+            posConsidered = result.corde_mesure.Data[]((end-N):end);
+            A = max(posConsidered) - min(posConsidered);
+            [justesse, precision] = GetPerformance(result.freq.Data(:,1), params);
+            vitesse = GetVitesse(~, freqTimeSeries, params)
+        end
+
+        function vitesse = GetVitesse(~, freqTimeSeries, params)
+            criteria = 1; %Actually depends on the freq. 1/8 ton...
+%             N = params.f_time_step/params.dt;
+            idx = find( (freqTimeSeries.Data-params.f_final) > criteria, 1 ,'last');
+            vitesse = freqTimeSeries.Time(idx);
+        end
+        function [justesse, precision] = GetPerformance(obj, freqVector, params)
+            if((params.duration - params.f_time_step) < obj.performanceTimeConsidered)
+                l = params.duration - params.f_time_step;
+            else
+                l = obj.performanceTimeConsidered;
+            end
+            N =  l/ params.dt;
+            %Check time
+            fSample =freqVector((end-N):end);
+            justesse = mean((fSample-consigne)/params.f_final);
+            precision = std(fSample);
+        end
+    end
+
+end
+
+
