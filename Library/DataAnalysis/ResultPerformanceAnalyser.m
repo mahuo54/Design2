@@ -7,6 +7,10 @@ classdef ResultPerformanceAnalyser
         function obj = ResultPerformanceAnalyser()
         end
         function performanceResult = GetPerformance(obj, result, params)
+            if(~isempty(result.ErrorMessage))
+                performanceResult = PerformanceResult.FailedSimulation();
+                return;
+            end
             if((params.duration - params.f_time_step) < obj.performanceTimeConsidered)
                 l = params.duration - params.f_time_step;
             else

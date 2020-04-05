@@ -3,10 +3,18 @@ classdef SimulationDataFormator < handle
     %   Detailed explanation goes here
     properties
         ColumnName;
-        rowsDatas;
         varyingParams;
-        FinishAddRowDelegate;
+        ParameterLabelName;
+        rowsDatas;        
         MapVaryingParamsToValues;
+        
+        FinishAddRowDelegate;
+    end
+    events
+        NewRowAdded;
+    end
+    properties (Constant)
+        criteriaName = {'Justesse' 'Précision' 'Vitesse d''accord' 'A'};
     end
     
     methods
@@ -28,6 +36,15 @@ classdef SimulationDataFormator < handle
         function SingleSimulationFinishHandler(obj,eventSrc, eventData)
             AddRow(obj, eventData.result, eventData.param, eventData.performance);
             obj.FinishAddRowDelegate(obj.rowsDatas);
+            notify(obj, 'NewRowAdded',eventData);
+        end
+        
+        function AddArraysOfResultParameters(obj,resultsByParameters)
+            for i = 1:length(resultsByParameters)
+                result = resultsByParameters{i};
+                AddRow(obj, result{2}, result{1}, result{3});
+            end
+            obj.FinishAddRowDelegate(obj.rowsDatas);
         end
         
         function Reset(obj)
@@ -37,7 +54,7 @@ classdef SimulationDataFormator < handle
     end
     methods (Access = public, Static)
         function ColumnNames = GetDefaultColumnName()
-            ColumnNames  = {'Id' 'Succès' 'Temps' 'Justesse' 'Précision' 'Vitesse d''accord' 'A'};
+            ColumnNames  = ['Id' 'Succès' 'Temps' SimulationDataFormator.criteriaName];
         end
     end
     methods (Access = private)
@@ -45,7 +62,8 @@ classdef SimulationDataFormator < handle
             obj.varyingParams = params.GetVaryingParam();
             if(~isempty(obj.varyingParams))
                 varyingParamLabels = cellfun(@(p) SimulationParameterManager.GetLabel(p), obj.varyingParams, 'UniformOutput',false);
-                obj.ColumnName = ['Id' varyingParamLabels 'Succès' 'Temps' 'Justesse' 'Vitesse d''accord'];
+                obj.ParameterLabelName = varyingParamLabels;
+                obj.ColumnName = ['Id' varyingParamLabels 'Succès' 'Temps' SimulationDataFormator.criteriaName];
             else
                 obj.ColumnName = SimulationDataFormator.GetDefaultColumnName();
             end            
@@ -59,7 +77,7 @@ classdef SimulationDataFormator < handle
             end
             rowEnd = {successStr ...
                 num2str(result.SimulationMetadata.TimingInfo.TotalElapsedWallTime) ...
-                num2str(performance.Justesse) num2str(performance.Precision) num2str(performance.Vitessse) num2str(performance.A)};
+                num2str(performance.Justesse) num2str(performance.Precision) num2str(performance.Vitesse) num2str(performance.A)};
             %create the row. first try it without the varying params
             if(~isempty(obj.varyingParams))
                 paramRow = {};

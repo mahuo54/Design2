@@ -369,7 +369,7 @@ classdef SimulationParameterManager < handle
         
     end
     
-    methods (Access = private, Static = true)
+    methods (Static = true)
         %https://www.mathworks.com/matlabcentral/answers/98191-how-can-i-obtain-all-possible-combinations-of-given-vectors-in-matlab
         function results = GetCombinations(elements)
             combinations = cell(1, numel(elements)); %set up the varargout result

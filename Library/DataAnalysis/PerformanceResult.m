@@ -4,6 +4,7 @@ classdef PerformanceResult
         Precision;
         A;
         Vitesse;
+        HasError = false;
     end
     
     methods
@@ -14,6 +15,12 @@ classdef PerformanceResult
             obj.Precision = Precision;
             obj.A = A;
             obj.Vitesse = Vitesse;
+        end
+    end
+    methods(Static)
+        function obj = FailedSimulation()
+            obj = PerformanceResult('','','','');
+            obj.HasError = true;
         end
     end
 end

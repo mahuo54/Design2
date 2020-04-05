@@ -108,6 +108,9 @@ classdef SystemSimulator < handle
             set_param(corde_h,'Parameters',sprintf('%d, %d, %d, %i, %d',...
                 simulationParameter.corde.M,simulationParameter.corde.L,simulationParameter.corde.b,simulationParameter.corde.N,simulationParameter.dt));
             
+            %% Force cst - Change size of vector.
+            corde_h = Simulink.findBlocks(model,'Name','force_cst');
+            set_param(corde_h, 'Value',['zeros(1,' num2str(simulationParameter.corde.N) ')']);
             %% Set Initial Conditions
             x_0_cst_h = Simulink.findBlocks(model,'Name','x_0_cst');
             if(length(simulationParameter.corde.x_0) == 1)

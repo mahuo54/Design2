@@ -26,6 +26,9 @@ classdef SimulatorManager < handle
                 end
                 PrintStatusDelegate(sprintf('Simulation en cours (%i/%i)',i,N));
                 result = obj.systemSimulator.RunSimulation(simulationParamArrays(i));
+                if(obj.flagStopSimulation)
+                    result.ErrorMessage = "Simulation stopped";
+                end
                 performances = obj.resultPerformanceAnalyser.GetPerformance(result, simulationParamArrays(i));
                 obj.resultsByParameter{i} = {simulationParamArrays(i), result, performances};
                 notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i), result, i, performances));
