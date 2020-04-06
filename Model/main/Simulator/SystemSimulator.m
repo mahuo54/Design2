@@ -23,7 +23,7 @@ classdef SystemSimulator < handle
 %             set_param(mdl_cs,'Name','ConfigSim');
 %             attachConfigSet(obj.modelName, mdl_cs);
 %             setActiveConfigSet(obj.modelName,'ConfigSim');
-            results = sim(obj.modelName, 'CaptureErrors', 'on','timeout', 120 ); %'StartTime','0','StopTime','10','FixedStep',num2str(dt));
+            results = sim(obj.modelName, 'CaptureErrors', 'on','timeout', 600 ); %'StartTime','0','StopTime','10','FixedStep',num2str(dt));
             %Other parameters to consider 
             % 'CaptureErrors', 'on' -> results hold error in metadata
             % 'timeout', '1000' -> results hold error in metadata
