@@ -16,6 +16,8 @@ classdef SimulationActionParameter < handle
         WhiteNoiseIsOn = false;
         WhiteNoiseVar = 0.0000000001;
         WhiteNoiseMean = 0;
+        
+        harmonique = 2;
     end
     
     methods

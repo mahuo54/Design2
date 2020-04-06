@@ -87,6 +87,7 @@ classdef SimulationParameterManager < handle
         function varyingParams = GetVaryingParam(obj)
             p = properties(obj);
             varyingParams = [];
+%             paramsRange = {};
             for i = 1:length(p)
                 if(p(i)=="x_0" || p(i)=="v_0")
                     continue;
@@ -94,6 +95,8 @@ classdef SimulationParameterManager < handle
                 s = strcat('length(obj.', p(i), ')');
                 if(eval(s{1}) > 1)
                     varyingParams = [varyingParams p(i)];
+%                     values = eval(sprintf('obj.p(%i)'));
+%                     paramsRange = [paramsRange; min(values) max(values)];
                 end
             end
         end

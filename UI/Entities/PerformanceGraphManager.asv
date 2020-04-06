@@ -4,7 +4,6 @@ classdef PerformanceGraphManager < handle
         group;
         groupListStr;
         uniqueParameter;
-        uniqueParameterLabel;
         MapLineById;
     end
     properties (Access = private)
@@ -27,9 +26,6 @@ classdef PerformanceGraphManager < handle
             end            
             idx_perf = find( cellfun( @(x) x == criteria, obj.simulationDataFormator.ColumnName),1 , 'first');
             
-            %Plot limit
-            values = obj.simulationDataFormator.MapLabelToValues(p);
-            fig.XLim =[0.9*min(values) 1.1*max(values)];
             %Color gradient.
             if(isempty(obj.group))
                 x = str2double(obj.simulationDataFormator.rowsDatas(:,obj.idxCurrentParam+1));
@@ -42,18 +38,11 @@ classdef PerformanceGraphManager < handle
                 for i = 1: max(obj.group)
                     x = str2double(obj.simulationDataFormator.rowsDatas(obj.group==i,obj.idxCurrentParam+1));
                     y = str2double(obj.simulationDataFormator.rowsDatas(obj.group==i, idx_perf));
-                    if(length(x) == 1)
-                        plot(fig,x,y,'+','Color',colorGradient(i,:),'DisplayName', num2str(i));
-                    else
-                        plot(fig,x,y,'Color',colorGradient(i,:),'DisplayName', num2str(i));
-                    end                    
+                    plot(fig,x,y,'Color',colorGradient(i,:),'DisplayName', num2str(i));
                     hold(fig,'on');
                 end
                 hold(fig, 'off');
-                obj.MapLineById = containers.Map('KeyType','double', 'ValueType','any');
-                for i = 1:length(fig.Children)
-                    obj.MapLineById(str2double(fig.Children(i).DisplayName)) = fig.Children(i);
-                end
+                obj.MapLineById = containers.Map(str2double(arrayfun(@(l) l.DisplayName, fig.Children)),fig.Children);
             end
            
             %sadly, unsupported with current version of matlab...
@@ -80,7 +69,6 @@ classdef PerformanceGraphManager < handle
             
             %Build command to find groups
             obj.uniqueParameter = {};
-            obj.uniqueParameterLabel = obj.simulationDataFormator.ParameterLabelName(paramToGroup-1);
             rows = obj.simulationDataFormator.GetSuccessRow();
             paramsInputStr = strjoin(arrayfun( @(idx) sprintf('obj.uniqueParameter(:,%i)',idx),   1:length(paramToGroup), 'UniformOutput',   false), ',');
             rowsDataStr = strjoin(arrayfun( @(idx) sprintf('rows(:,%i)',idx),   paramToGroup, 'UniformOutput',   false), ',');

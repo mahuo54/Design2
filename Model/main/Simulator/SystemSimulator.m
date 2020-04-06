@@ -87,6 +87,10 @@ classdef SystemSimulator < handle
             manualFreqH = Simulink.findBlocks(obj.modelName, 'Name','Consigne_f_cst');
             set_param(manualFreqH, 'Value',num2str(freq));
         end
+        function SetHarmonique(obj, harmonique)
+            harmonique_f = Simulink.findBlocks(obj.modelName,'Name','harmonique');
+            set_param(harmonique_f, 'Gain',num2str(harmonique));
+        end
     end
     methods (Access = private)
         function SetParameter(obj, model, simulationParameter)
@@ -209,7 +213,6 @@ classdef SystemSimulator < handle
             set_param(mesure_fre_transFct_h, 'Denominator',['[' num2str(simulationParameter.freq_mes_transfer) ' 1]' ]);
             clock_h =  Simulink.findBlocks(mesure_freq_h, 'Name','Clock');
             set_param(clock_h, 'Decimation',num2str(simulationParameter.GetClockDecimation())); %TOADD AND CHECK
-
         end
         
 %         function idx = GetIndex(~,x,N)

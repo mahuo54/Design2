@@ -26,10 +26,10 @@ classdef SimulatorManager < handle
                 end
                 PrintStatusDelegate(sprintf('Simulation en cours (%i/%i)',i,N));
                 result = obj.systemSimulator.RunSimulation(simulationParamArrays(i));
-                if(obj.flagStopSimulation)
-                    result.ErrorMessage = "Simulation stopped";
-                end
                 performances = obj.resultPerformanceAnalyser.GetPerformance(result, simulationParamArrays(i));
+                if(obj.flagStopSimulation || ~isempty(result.ErrorMessage ))
+                    performances.HasError = true;
+                end                
                 obj.resultsByParameter{i} = {simulationParamArrays(i), result, performances};
                 notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i), result, i, performances));
             end           
@@ -60,6 +60,9 @@ classdef SimulatorManager < handle
         end
         function SetManualFrequence(obj, isOn, freq)
             obj.systemSimulator.SetManualFrequence(isOn, freq);
+        end
+        function SetHarmonique(obj, harmonique)
+           obj.systemSimulator.SetHarmonique(harmonique); 
         end
         
         function add_listener_formator(obj, simulationDataFormator)

@@ -7,7 +7,6 @@ classdef SimulationDataFormator < handle
         ParameterLabelName;
         rowsDatas;        
         MapVaryingParamsToValues;
-        MapLabelToValues;
         
         FinishAddRowDelegate;
     end
@@ -30,13 +29,13 @@ classdef SimulationDataFormator < handle
         end
         function SetSimulation(obj, params)
             obj.SetColumnNames(params);
-            paramNames = params.GetVaryingParam();
+            [paramNames paramsRange] = params.GetVaryingParam();
             obj.MapVaryingParamsToValues = containers.Map('KeyType','char','ValueType','any');
             obj.MapLabelToValues = containers.Map('KeyType','char','ValueType','any');
 
             for i = 1:length(paramNames)
                 obj.MapVaryingParamsToValues(paramNames{i}) = eval(strcat('params.',paramNames{i}));
-                obj.MapLabelToValues(SimulationParameterManager.GetLabel( paramNames{i})) = eval(strcat('params.',paramNames{i}));
+                onj.MapLabelToValues (SimulationParameterManager.GetLabel( paramNames{i}) = eval(strcat('params.',paramNames{i}));
             end
         end
         
