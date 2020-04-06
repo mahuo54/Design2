@@ -1,11 +1,12 @@
 classdef PerformanceGraphManager < handle 
     properties
         simulationDataFormator SimulationDataFormator;
+        group;
+        uniqueParameter;
     end
     properties (Access = private)
         currentParameterName = "";
         idxCurrentParam;
-        group;
     end
     
     methods
@@ -24,16 +25,21 @@ classdef PerformanceGraphManager < handle
             idx_perf = find( cellfun( @(x) x == criteria, obj.simulationDataFormator.ColumnName),1 , 'first');
             
             %Color gradient.
-            
-            colorGradient = jet(max(obj.group));
-            for i = 1: max(obj.group)
-                x = str2double(obj.simulationDataFormator.rowsDatas(obj.group==i,obj.idxCurrentParam+1));
-                y = str2double(obj.simulationDataFormator.rowsDatas(obj.group==i, idx_perf));
-                plot(fig,x,y,'Color',colorGradient(i,:),'DisplayName', num2str(i)); 
-                hold(fig);
+            if(isempty(obj.group))
+                x = str2double(obj.simulationDataFormator.rowsDatas(:,obj.idxCurrentParam+1));
+                y = str2double(obj.simulationDataFormator.rowsDatas(:, idx_perf));
+                plot(fig,x,y);
+            else
+                colorGradient = jet(max(obj.group));
+                for i = 1: max(obj.group)
+                    x = str2double(obj.simulationDataFormator.rowsDatas(obj.group==i,obj.idxCurrentParam+1));
+                    y = str2double(obj.simulationDataFormator.rowsDatas(obj.group==i, idx_perf));
+                    plot(fig,x,y,'Color',colorGradient(i,:),'DisplayName', num2str(i));
+                    hold(fig);
+                end
+                hold(fig, 'off');
             end
-            hold(fig, 'off');
-            idxLines = obj.group;
+           
             %sadly, unsupported with current version of matlab...
 %             dcm_obj = datacursormode(fig);
 %             set(dcm_obj,'DisplayStyle','datatip',...
@@ -49,13 +55,20 @@ classdef PerformanceGraphManager < handle
             obj.idxCurrentParam = find( cellfun( @(x) x == p, obj.simulationDataFormator.ParameterLabelName),1 , 'first');
             
             N = length(obj.simulationDataFormator.varyingParams);
+            if (N==1)
+                return;
+            end
             paramToGroup = 1:N;
             paramToGroup(obj.idxCurrentParam) = [];
-            paramToGroup = paramToGroup+1;
+            paramToGroup = paramToGroup+1;  
             
             %Build command to find groups
-            cmdStr = sprintf('findgroups(%s)',strjoin(arrayfun( @(idx) sprintf('obj.simulationDataFormator.rowsDatas(:,%i)',idx),   paramToGroup, 'UniformOutput',   false), ','));
-            obj.group = eval(cmdStr);
+            obj.uniqueParameter = {};
+            rows = obj.simulationDataFormator.GetSuccessRow();
+            paramsInputStr = strjoin(arrayfun( @(idx) sprintf('obj.uniqueParameter{:,%i}',idx),   1:length(paramToGroup), 'UniformOutput',   false), ',');
+            rowsDataStr = strjoin(arrayfun( @(idx) sprintf('rows(:,%i)',idx),   paramToGroup, 'UniformOutput',   false), ',');
+            cmdStr = sprintf('[obj.group,%s] = findgroups(%s)',paramsInputStr,rowsDataStr );
+            eval(cmdStr);
             %G = findgroups(simulationDataFormator.rowsDatas(:,2),simulationDataFormator.rowsDatas(:,4));
         end        
     end

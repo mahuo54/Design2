@@ -23,7 +23,10 @@ classdef SimulationDataFormator < handle
                FinishAddRowDelegate = @obj.DoNothing; 
             end
             obj.FinishAddRowDelegate = FinishAddRowDelegate;
-        end       
+        end 
+        function rowsDatas = GetSuccessRow(obj)
+            rowsDatas = obj.rowsDatas(obj.rowsDatas(:,obj.ColumnName == "Succès")=="Oui",:);
+        end
         function SetSimulation(obj, params)
             obj.SetColumnNames(params);
             paramNames = params.GetVaryingParam();
