@@ -27,12 +27,12 @@ classdef ResultPerformanceAnalyser
         function vitesse = GetVitesse(~, freqTimeSeries, params)
             criteria = 1; %Actually depends on the freq. 1/8 ton...
 %             N = params.f_time_step/params.dt;
-            idx = find( (freqTimeSeries.Data-params.GetConsigne()) > criteria, 1 ,'last');
-            vitesse = freqTimeSeries.Time(idx);
+            idx = find( abs(freqTimeSeries.Data-params.GetConsigne()) > criteria, 1 ,'last');
+            vitesse = freqTimeSeries.Time(idx)-params.f_time_step;
         end
         function [justesse, precision] = GetJustessePrecision(obj, freqVector, params)
             consigne = params.GetConsigne();
-            if((params.duration - consigne) < obj.performanceTimeConsidered)
+            if((params.duration - params.f_time_step) < obj.performanceTimeConsidered)
                 l = params.duration - params.f_time_step;
             else
                 l = obj.performanceTimeConsidered;
