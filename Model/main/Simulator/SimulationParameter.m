@@ -68,6 +68,9 @@ classdef SimulationParameter
                 decimation = ceil(1000/obj.clockFreq);
             end
         end
+        function consigne = GetConsigne(obj)
+            consigne = obj.f_final*obj.Harmonique;
+        end
     end
     methods (Access = private)
         function idx = GetIndex(obj, x)
