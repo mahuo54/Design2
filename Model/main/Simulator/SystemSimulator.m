@@ -12,7 +12,7 @@ classdef SystemSimulator < handle
             %inSimulation.                        
             model = load_system(obj.modelName);
             obj.SetParameter(model,simulationParameter);
-            save_system(model, 'OverwriteIfChangedOnDisk',true);            
+            save_system(model, [], 'OverwriteIfChangedOnDisk',true);            
             
             mdl_cs = getActiveConfigSet(obj.modelName);
 %             mdl_cs = cs.copy;
