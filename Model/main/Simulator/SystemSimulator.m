@@ -213,6 +213,9 @@ classdef SystemSimulator < handle
             set_param(mesure_fre_transFct_h, 'Denominator',['[' num2str(simulationParameter.freq_mes_transfer) ' 1]' ]);
             clock_h =  Simulink.findBlocks(mesure_freq_h, 'Name','Clock');
             set_param(clock_h, 'Decimation',num2str(simulationParameter.GetClockDecimation())); %TOADD AND CHECK
+            
+            %% Autre
+            obj.SetHarmonique(num2str(simulationParameter.Harmonique));
         end
         
 %         function idx = GetIndex(~,x,N)

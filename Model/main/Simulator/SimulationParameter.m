@@ -35,6 +35,8 @@ classdef SimulationParameter
         capteur_courantMax = 0.0218;
         IsPolarisationInverted = true;
         regulateur_accordI = -0.000271;
+        
+        Harmonique = 2;
     end
     methods
         function obj = SimulationParameter()

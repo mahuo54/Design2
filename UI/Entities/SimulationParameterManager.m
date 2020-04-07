@@ -33,6 +33,8 @@ classdef SimulationParameterManager < handle
         Frequence_initial double;
         Frequence_time_step double;
         
+        Harmonique double;
+        
         %ADD NEW VARIABLE
         clockFreq (1,:) double;
         servoClefVitesseMax  (1,:) double;
@@ -109,7 +111,7 @@ classdef SimulationParameterManager < handle
             obj.position_centre = defaultParameter.position_centre;
             obj.pos_actuateur_relative = defaultParameter.pos_actuateur_relative ;
             obj.pos_capteur_relative = defaultParameter.pos_capteur_relative;
-%             obj.polarite = defaultParameter.polarite; %deleted
+            obj.Harmonique = defaultParameter.Harmonique;
             
             obj.LinearDensity = defaultParameter.corde.M/defaultParameter.corde.L;
             obj.Length = defaultParameter.corde.L;
@@ -143,7 +145,6 @@ classdef SimulationParameterManager < handle
             obj.regulateur_accordI      = defaultParameter.regulateur_accordI ;
             
             obj.simulationActionParameter = SimulationActionParameter();
-            
         end
         
         function SimulationParametersArray = EnumerateSimulationParameters(obj)
@@ -183,6 +184,7 @@ classdef SimulationParameterManager < handle
                 
                 simParams = SimulationParameter();         
                 simParams.duration = obj.Duration;
+                simParams.Harmonique = obj.Harmonique;
                 simParams.f_final = parameters(1);
                 simParams.f_start = obj.Frequence_initial;
                 simParams.f_time_step = obj.Frequence_time_step;
