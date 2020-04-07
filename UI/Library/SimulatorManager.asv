@@ -39,7 +39,7 @@ classdef SimulatorManager < handle
             obj.resultsByParameter = resultsByParameter;
             for i = 1:length(resultsByParameter)
                 result = resultsByParameter{i};
-                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(result{1}, result{2}, i, result{3}));
+                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(simulationParamArrays(i,1), simulationParamArrays(i,2), i, simulationParamArrays(i,3)));
             end
         end
         
