@@ -44,7 +44,7 @@ classdef ResultPerformanceAnalyser
             justesse = mean((fSample-consigne)/consigne);
             precision = std(fSample);
         end
-        function criteria = GetCriteria(consigne)
+        function criteria = GetCriteria(~, consigne)
             criteria = min([consigne*(2^(1/6)-1)/8 1]);
         end
     end
