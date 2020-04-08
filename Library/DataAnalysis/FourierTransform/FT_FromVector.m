@@ -16,5 +16,7 @@ PSD = P2(1:L/2+1);
 PSD(2:end-1) = 2*PSD(2:end-1);
 f = Fs*(0:(L/2))/L;
 
+
+
 end
 

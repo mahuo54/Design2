@@ -21,9 +21,17 @@ classdef ResultPerformanceAnalyser
             A = max(posConsidered) - min(posConsidered);
             [Justesse, Precision] = obj.GetJustessePrecision(result.freq.Data(:,1), params);
             Vitesse = obj.GetVitesse(result.freq, params);
-            performanceResult = PerformanceResult(Justesse, Precision, A, Vitesse);
+            RatioHarmonique = obj.GetRatio(result, params, N);
+            performanceResult = PerformanceResult(Justesse, Precision, A, Vitesse, RatioHarmonique);
         end
 
+        function RatioHarmonique = GetRatio(~, result, params, N) 
+            [PSD, f] = FT_FromVector(result.corde_mesure.Data((end-N):end,params.GetIndexCapteur()), result.corde_mesure.Time((end-N):end));
+            f_final =params.f_final;            
+            A2 = max(PSD(f >= 2*f_final*0.95 & f <= 2*f_final*1.05));
+            A1 = max(PSD(f >= f_final*0.95 & f <= f_final*1.05));
+            RatioHarmonique = A2/A1;
+        end
         function vitesse = GetVitesse(obj, freqTimeSeries, params)
             consigne = params.GetConsigne();
             criteria = obj.GetCriteria(consigne); %Actually depends on the freq. 1/8 ton...

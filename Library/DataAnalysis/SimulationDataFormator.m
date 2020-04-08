@@ -15,7 +15,7 @@ classdef SimulationDataFormator < handle
         NewRowAdded;
     end
     properties (Constant)
-        criteriaName = {'Justesse' 'Précision' 'Vitesse d''accord' 'Amplitude' 'Fréquence'};
+        criteriaName = {'Justesse' 'Précision' 'Vitesse d''accord' 'Amplitude' 'Ratio harmonique' 'Fréquence'};
     end
     
     methods
@@ -61,7 +61,7 @@ classdef SimulationDataFormator < handle
     end
     methods (Access = public, Static)
         function ColumnNames = GetDefaultColumnName()
-            ColumnNames  = ['Id' 'Succès' 'Message' 'Temps' SimulationDataFormator.criteriaName];
+            ColumnNames  = ['Id' 'Succès' 'Temps' SimulationDataFormator.criteriaName];
         end
     end
     methods (Access = private)
@@ -70,7 +70,7 @@ classdef SimulationDataFormator < handle
             if(~isempty(obj.varyingParams))
                 varyingParamLabels = cellfun(@(p) SimulationParameterManager.GetLabel(p), obj.varyingParams, 'UniformOutput',false);
                 obj.ParameterLabelName = varyingParamLabels;
-                obj.ColumnName = ['Id' varyingParamLabels 'Succès' 'Message' 'Temps' SimulationDataFormator.criteriaName];
+                obj.ColumnName = ['Id' varyingParamLabels 'Succès' 'Temps' SimulationDataFormator.criteriaName];
             else
                 obj.ColumnName = SimulationDataFormator.GetDefaultColumnName();
             end            
@@ -82,9 +82,9 @@ classdef SimulationDataFormator < handle
             else
                 successStr = 'Non';
             end
-            rowEnd = {successStr result.ErrorMessage ...
+            rowEnd = {successStr ...
                 num2str(result.SimulationMetadata.TimingInfo.TotalElapsedWallTime) ...
-                num2str(performance.Justesse) num2str(performance.Precision) num2str(performance.Vitesse) num2str(performance.A) num2str(result.freq.Data(end))};
+                num2str(performance.Justesse) num2str(performance.Precision) num2str(performance.Vitesse) num2str(performance.A) num2str(performance.RatioHarmonique) num2str(result.freq.Data(end))};
             %create the row. first try it without the varying params
             if(~isempty(obj.varyingParams))
                 paramRow = {};
