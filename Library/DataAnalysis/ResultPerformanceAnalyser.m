@@ -21,16 +21,26 @@ classdef ResultPerformanceAnalyser
             A = max(posConsidered) - min(posConsidered);
             [Justesse, Precision] = obj.GetJustessePrecision(result.freq.Data(:,1), params);
             Vitesse = obj.GetVitesse(result.freq, params);
-            performanceResult = PerformanceResult(Justesse, Precision, A, Vitesse);
+            RatioHarmonique = obj.GetRatio(result, params, N);
+            performanceResult = PerformanceResult(Justesse, Precision, A, Vitesse, RatioHarmonique);
         end
 
-        function vitesse = GetVitesse(~, freqTimeSeries, params)
-            criteria = 1; %Actually depends on the freq. 1/8 ton...
+        function RatioHarmonique = GetRatio(~, result, params, N) 
+            [PSD, f] = FT_FromVector(result.corde_mesure.Data((end-N):end,params.GetIndexCapteur()), result.corde_mesure.Time((end-N):end));
+            f_final =params.f_final;            
+            A2 = max(PSD(f >= 2*f_final*0.95 & f <= 2*f_final*1.05));
+            A1 = max(PSD(f >= f_final*0.95 & f <= f_final*1.05));
+            RatioHarmonique = A2/A1;
+        end
+        function vitesse = GetVitesse(obj, freqTimeSeries, params)
+            consigne = params.GetConsigne();
+            criteria = obj.GetCriteria(consigne); %Actually depends on the freq. 1/8 ton...
 %             N = params.f_time_step/params.dt;
-            idx = find( (freqTimeSeries.Data-params.f_final) > criteria, 1 ,'last');
-            vitesse = freqTimeSeries.Time(idx);
+            idx = find( abs(freqTimeSeries.Data-consigne) > criteria, 1 ,'last');
+            vitesse = freqTimeSeries.Time(idx)-params.f_time_step;
         end
         function [justesse, precision] = GetJustessePrecision(obj, freqVector, params)
+            consigne = params.GetConsigne();
             if((params.duration - params.f_time_step) < obj.performanceTimeConsidered)
                 l = params.duration - params.f_time_step;
             else
@@ -39,8 +49,11 @@ classdef ResultPerformanceAnalyser
             N =  l/ params.dt;
             %Check time
             fSample =freqVector((end-N):end);
-            justesse = mean((fSample-params.f_final)/params.f_final);
+            justesse = mean((fSample-consigne)/consigne);
             precision = std(fSample);
+        end
+        function criteria = GetCriteria(~, consigne)
+            criteria = min([consigne*(2^(1/6)-1)/8 1]);
         end
     end
 

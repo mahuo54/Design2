@@ -15,7 +15,7 @@ classdef SimulationDataFormator < handle
         NewRowAdded;
     end
     properties (Constant)
-        criteriaName = {'Justesse' 'Précision' 'Vitesse d''accord' 'A'};
+        criteriaName = {'Justesse' 'Précision' 'Vitesse d''accord' 'Amplitude' 'Ratio harmonique' 'Fréquence'};
     end
     
     methods
@@ -84,7 +84,7 @@ classdef SimulationDataFormator < handle
             end
             rowEnd = {successStr ...
                 num2str(result.SimulationMetadata.TimingInfo.TotalElapsedWallTime) ...
-                num2str(performance.Justesse) num2str(performance.Precision) num2str(performance.Vitesse) num2str(performance.A)};
+                num2str(performance.Justesse) num2str(performance.Precision) num2str(performance.Vitesse) num2str(performance.A) num2str(performance.RatioHarmonique) num2str(result.freq.Data(end))};
             %create the row. first try it without the varying params
             if(~isempty(obj.varyingParams))
                 paramRow = {};

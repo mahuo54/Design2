@@ -35,6 +35,14 @@ classdef SimulatorManager < handle
             end           
             results = obj.resultsByParameter;
         end
+        function LoadResultArray(obj, resultsByParameter) 
+            obj.resultsByParameter = resultsByParameter;
+            for i = 1:length(resultsByParameter)
+                result = resultsByParameter{i};
+                notify(obj, 'SingleSimulationFinish', SimulationFinishEventData(result{1}, result{2}, i, result{3}));
+            end
+        end
+        
         function result = GetLatestResult(obj) 
             result = obj.resultsByParameter{length(obj.resultsByParameter)};
         end

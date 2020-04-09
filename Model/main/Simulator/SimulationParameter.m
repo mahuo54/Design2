@@ -35,6 +35,8 @@ classdef SimulationParameter
         capteur_courantMax = 0.0218;
         IsPolarisationInverted = true;
         regulateur_accordI = -0.000271;
+        
+        Harmonique = 2;
     end
     methods
         function obj = SimulationParameter()
@@ -65,6 +67,9 @@ classdef SimulationParameter
             else
                 decimation = ceil(1000/obj.clockFreq);
             end
+        end
+        function consigne = GetConsigne(obj)
+            consigne = obj.f_final*obj.Harmonique;
         end
     end
     methods (Access = private)
